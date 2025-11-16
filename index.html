@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>التحليل التربوي الذكي - محمد الحربي</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+  :root{
+    --bg:#f7f9fb; --primary:#3b82f6; --muted:#64748b; --accent:#22c55e; --card:#ffffff;
+  }
+  *{box-sizing:border-box}
+  body{font-family:'Cairo',sans-serif;background:var(--bg);color:#0b243f;margin:0;padding:18px;}
+  .container{max-width:1200px;margin:0 auto;background:var(--card);border-radius:10px;box-shadow:0 12px 30px rgba(2,6,23,0.06);overflow:hidden}
+  header{background:linear-gradient(120deg,var(--primary),#0b5ea8);color:#fff;padding:18px;text-align:center}
+  header h1{margin:0;font-size:1.35rem}
+  header .sub{opacity:0.95;margin-top:6px}
+  .section{padding:18px}
+  .grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  label{display:block;margin-bottom:6px;font-weight:600}
+  input[type="text"],input[type="number"],select,textarea{width:100%;padding:10px;border:1px solid #e6eef7;border-radius:8px;font-size:1rem}
+  button{padding:10px 14px;border-radius:8px;border:0;background:var(--primary);color:#fff;cursor:pointer}
+  .small{font-size:0.92rem;color:var(--muted)}
+  .upload-box{border:2px dashed #dbeafe;padding:12px;border-radius:8px;background:#f8fbff;text-align:center}
+  .card{background:#f1f8ff;padding:12px;border-radius:8px;text-align:center}
+  .table-wrap{margin-top:12px;overflow:auto}
+  table{width:100%;border-collapse:collapse;border:1px solid #eef6ff;font-size:0.95rem}
+  th,td{padding:8px 10px;border:1px solid #f1f8ff;text-align:center}
+  th{background:var(--primary);color:#fff}
+  .report{background:#fff;padding:12px;border-left:4px solid var(--accent);margin-top:12px;white-space:pre-line}
+  .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+  .export{background:var(--accent);color:#fff;padding:10px 12px;border-radius:8px;border:0;cursor:pointer}
+  .no-print{display:inline-block}
+  @media print{.no-print{display:none!important}.container{box-shadow:none}}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>التحليل التربوي الذكي لنتائج الفصول</h1>
+    <div class="sub">إعداد: <strong>محمد الحربي</strong> — <strong>ثانوية الرازي</strong></div>
+  </header>
+
+  <!-- INPUT SECTION -->
+  <div class="section no-print" id="inputSection">
+    <h3>إعداد الاختبار وإدخال البيانات</h3>
+    <div class="grid" style="margin-top:8px">
+      <div>
+        <label>اسم المعلم</label>
+        <input id="teacherName" type="text" value="محمد الحربي" />
+      </div>
+      <div>
+        <label>اسم المدرسة</label>
+        <input id="schoolName" type="text" value="ثانوية الرازي" />
+      </div>
+      <div>
+        <label>المادة</label>
+        <input id="subject" type="text" value="الرياضيات" />
+      </div>
+      <div>
+        <label>نوع الاختبار</label>
+        <select id="testType">
+          <option value="تكويني">تكويني</option>
+          <option value="تقويمي">تقويمي</option>
+          <option value="تشخيصي">تشخيصي</option>
+          <option value="مهاري">مهاري</option>
+          <option value="شفوي">شفوي</option>
+        </select>
+      </div>
+      <div>
+        <label>الدرجة الكلية</label>
+        <input id="totalGrade" type="number" value="100" min="1" />
+      </div>
+      <div>
+        <label>عدد الفصول للتحليل</label>
+        <select id="classCount">
+          <option value="1">فصل واحد</option>
+          <option value="2">فصلان</option>
+          <option value="3">3 فصول</option>
+          <option value="4">4 فصول</option>
+          <option value="5">5 فصول</option>
+          <option value="6">6 فصول</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="margin-top:12px">
+      <label>إدخال بيانات الفصول</label>
+      <div id="filesArea"></div>
+      <div class="small" style="margin-top:6px">يمكن رفع ملف Excel لكل فصل (عمودان على الأقل: "اسم الطالب" و"الدرجة")، أو لصق البيانات دفعة واحدة بصيغة: الاسم,الدرجة,عمودX,...</div>
+    </div>
+
+    <div style="margin-top:12px">
+      <label>تحليل ارتباط (اختياري)</label>
+      <div class="grid">
+        <div>
+          <select id="correlationMode">
+            <option value="">— بدون تحليل ارتباط —</option>
+            <option value="pearson">بيرسون (كمي × كمي)</option>
+            <option value="spearman">سبيرمان (رتبي/بديل)</option>
+            <option value="pointbiserial">بايسيريال (كمي × اسمي ثنائي)</option>
+            <option value="phi">فاي (اسمي ثنائي × اسمي ثنائي)</option>
+          </select>
+        </div>
+        <div>
+          <label>اختر فصلًا للتحليل (إن وُجد)</label>
+          <select id="corrClassSelect"></select>
+        </div>
+        <div>
+          <label>المتغير X</label>
+          <select id="corrVarX"><option value="">— اختر بعد رفع الملف —</option></select>
+        </div>
+        <div>
+          <label>المتغير Y</label>
+          <select id="corrVarY"><option value="">— اختر بعد رفع الملف —</option></select>
+        </div>
+      </div>
+      <div id="corrHint" class="small" style="margin-top:8px">بعد رفع الملفات سيعرض لك الأعمدة المتاحة للاختيار.</div>
+    </div>
+
+    <div style="margin-top:14px;display:flex;gap:10px">
+      <button id="analyzeBtn">تحليل تربوي متقدم</button>
+      <button id="resetBtn" class="no-print" style="background:#e74c3c">إعادة ضبط</button>
+    </div>
+
+    <div id="message" style="margin-top:12px"></div>
+  </div>
+
+  <!-- RESULTS SECTION -->
+  <div class="section" id="resultsSection" style="display:none">
+    <h3>نتائج وتحليلات</h3>
+    <div id="summaryArea"></div>
+    <div id="chartsArea" style="margin-top:10px">
+      <canvas id="comparisonChart" style="max-height:320px"></canvas>
+    </div>
+    <div id="perClassTables" style="margin-top:12px"></div>
+    <div id="corrResult" style="margin-top:12px"></div>
+    <div class="report" id="finalReport" style="margin-top:12px"></div>
+
+    <div class="controls no-print">
+      <button class="export" id="downloadPdf">تنزيل تقرير PDF</button>
+      <button class="export" id="downloadExcel">تنزيل Excel مُصَنَّف</button>
+      <button class="export" id="downloadWord">تنزيل Word (نسخة بسيطة)</button>
+      <button class="export" id="backBtn" style="background:#9b59b6">العودة للتعديل</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Utilities
+function toFixedStr(n,d=2){return Number(n).toFixed(d)}
+function mean(a){return a.reduce((s,x)=>s+x,0)/a.length}
+function median(a){const s=[...a].sort((x,y)=>x-y);const m=Math.floor(s.length/2);return s.length%2? s[m] : (s[m-1]+s[m])/2}
+function stdPop(a){const m=mean(a);return Math.sqrt(a.reduce((s,x)=>s+Math.pow(x-m,2),0)/a.length)}
+function rankArray(arr){const sorted=arr.map((v,i)=>({v,i})).sort((a,b)=>a.v-b.v);const ranks=[];for(let i=0;i<sorted.length;i++)ranks[sorted[i].i]=i+1;return ranks}
+function pearsonCorr(x,y){if(x.length!==y.length||x.length===0) return NaN;const mx=mean(x), my=mean(y);let num=0,dx=0,dy=0;for(let i=0;i<x.length;i++){num+=(x[i]-mx)*(y[i]-my);dx+=(x[i]-mx)*(x[i]-mx);dy+=(y[i]-my)*(y[i]-my);}return num/Math.sqrt(dx*dy)}
+function spearmanCorr(x,y){return pearsonCorr(rankArray(x), rankArray(y))}
+function pointBiserialCorr(bin,quant){const n=bin.length;const meanAll=mean(quant);const mean1=mean(quant.filter((v,i)=>bin[i]===1));const mean0=mean(quant.filter((v,i)=>bin[i]===0));const p=bin.reduce((s,v)=>s+v,0)/n;const q=1-p;const sd=Math.sqrt(quant.reduce((s,v)=>s+Math.pow(v-meanAll,2),0)/n);return (mean1-mean0)/sd * Math.sqrt(p*q)}
+function phiCoefficient(bx,by){let a=0,b=0,c=0,d=0;for(let i=0;i<bx.length;i++){if(bx[i]===1&&by[i]===1) a++; else if(bx[i]===1&&by[i]===0) b++; else if(bx[i]===0&&by[i]===1) c++; else d++;}return (a*d - b*c)/Math.sqrt((a+b)*(c+d)*(a+c)*(b+d))}
+function classifyPercent(p){if(p>=90) return 'ممتاز'; if(p>=80) return 'جيد جداً'; if(p>=70) return 'جيد'; if(p>=60) return 'مقبول'; return 'ضعيف'}
+
+// UI for file inputs
+const filesArea = document.getElementById('filesArea');
+const classCountSelect = document.getElementById('classCount');
+const corrClassSelect = document.getElementById('corrClassSelect');
+const corrVarX = document.getElementById('corrVarX');
+const corrVarY = document.getElementById('corrVarY');
+let classFileInputs = []; // {fileInput,pasteArea,headers,sheetJson,classIndex}
+
+function buildFileInputs(){
+  filesArea.innerHTML=''; classFileInputs=[]; const count=Number(classCountSelect.value);
+  for(let i=1;i<=count;i++){
+    const div=document.createElement('div'); div.style.marginTop='8px';
+    div.innerHTML=`
+      <div style="display:flex;gap:10px;align-items:center">
+        <strong>فصل ${i}</strong>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+        <div class="upload-box">
+          <input type="file" accept=".xlsx,.xls" class="classFileInput" data-class="${i}">
+          <div class="small">أو الصق أسفل الجدول</div>
+        </div>
+        <div>
+          <textarea class="pasteArea" data-class-area="${i}" rows="5" placeholder="أو الصق هنا (الاسم,الدرجة,عمودX,...)"></textarea>
+        </div>
+      </div>
+    `;
+    filesArea.appendChild(div);
+    const fileInput = div.querySelector('.classFileInput');
+    const pasteArea = div.querySelector('.pasteArea');
+    classFileInputs.push({fileInput,pasteArea,headers:[],sheetJson:null,classIndex:i});
+    fileInput.addEventListener('change', onClassFileChange);
+  }
+  buildCorrClassOptions();
+}
+function buildCorrClassOptions(){corrClassSelect.innerHTML='';const count=Number(classCountSelect.value);for(let i=1;i<=count;i++){const o=document.createElement('option');o.value=i;o.innerText=`فصل ${i}`;corrClassSelect.appendChild(o);}corrClassSelect.dispatchEvent(new Event('change'))}
+classCountSelect.addEventListener('change', buildFileInputs);
+document.addEventListener('DOMContentLoaded', buildFileInputs);
+
+// read file
+async function onClassFileChange(e){
+  const input=e.target; const idx=classFileInputs.findIndex(c=>c.fileInput===input); if(idx<0) return;
+  const file=input.files[0]; if(!file) return;
+  try{
+    const arrayBuffer=await file.arrayBuffer();
+    const workbook=XLSX.read(arrayBuffer,{type:'array'});
+    const sheetName=workbook.SheetNames[0];
+    const sheet=workbook.Sheets[sheetName];
+    const json=XLSX.utils.sheet_to_json(sheet,{defval:''});
+    classFileInputs[idx].sheetJson=json;
+    classFileInputs[idx].headers=getHeadersFromJson(json);
+    showMessage(`تم قراءة ملف فصل ${classFileInputs[idx].classIndex} — ${json.length} صفوف.`, 'success');
+    populateCorrVarsFromFiles();
+  }catch(err){console.error(err);showMessage('خطأ في قراءة ملف Excel. تأكد من التنسيق.', 'error')}
+}
+function getHeadersFromJson(json){if(!json||json.length===0) return []; return Object.keys(json[0])}
+
+// main analyze
+document.getElementById('analyzeBtn').addEventListener('click', async ()=>{
+  try{
+    clearMessages();
+    const teacher=document.getElementById('teacherName').value||'-';
+    const school=document.getElementById('schoolName').value||'-';
+    const subject=document.getElementById('subject').value||'-';
+    const testType=document.getElementById('testType').value||'-';
+    const totalGrade=Number(document.getElementById('totalGrade').value)||100;
+    const classCount=Number(classCountSelect.value);
+    const classesData=[];
+    for(let i=0;i<classCount;i++){
+      const cfi=classFileInputs[i];
+      let json=cfi.sheetJson;
+      if((!json||json.length===0) && cfi.pasteArea.value.trim()) json=parsePasted(cfi.pasteArea.value);
+      if(!json||json.length===0) continue;
+      const normalized=json.map((row,idx)=>{
+        const name = row['اسم الطالب'] || row['name'] || row['Name'] || row['student'] || row['Student'] || Object.values(row)[0] || ('طالب'+(idx+1));
+        const rawGrade = row['الدرجة'] || row['grade'] || row['Grade'] || Object.values(row)[1] || '';
+        const grade = Number(rawGrade);
+        const extra={};
+        for(const k of Object.keys(row)){
+          if(['اسم الطالب','name','Name','student','Student','الدرجة','grade','Grade'].includes(k)) continue;
+          const v=row[k];
+          if(v===null||v===undefined||String(v).trim()==='') continue;
+          const num=Number(v);
+          extra[k]=isNaN(num)? String(v) : num;
+        }
+        return {name:String(name).trim(), grade:isNaN(grade)? null: grade, extra};
+      }).filter(r=>r.name);
+      classesData.push({label:`الفصل ${i+1}`, rows:normalized});
+    }
+    if(classesData.length===0){showMessage('لم يتم إدخال بيانات صالحة. ارفع ملفًا واحدًا على الأقل أو الصق البيانات.', 'error'); return}
+    const processedClasses=classesData.map(c=>{
+      const totalG=totalGrade;
+      const valid=c.rows.filter(r=>r.grade!==null && !isNaN(r.grade));
+      const limited=valid.slice(0,50);
+      const grades=limited.map(r=>r.grade);
+      const percents=grades.map(g=> (g/totalG)*100 );
+      const meanGrade=grades.length? mean(grades):0;
+      const meanPct=percents.length? mean(percents):0;
+      const medPct=percents.length? median(percents):0;
+      const sdPct=percents.length? stdPop(percents):0;
+      const maxGrade=grades.length? Math.max(...grades):0;
+      const minGrade=grades.length? Math.min(...grades):0;
+      const cats={'ممتاز':[],'جيد جداً':[],'جيد':[],'مقبول':[],'ضعيف':[]};
+      const rows=limited.map(r=>{const pct=(r.grade/totalG)*100; const cat=classifyPercent(pct); const diff=pct-meanPct; const out={...r,percent:pct,category:cat,diffFromMean:diff}; cats[cat].push(out); return out;});
+      const extras={};
+      rows.forEach(r=>{ for(const k in r.extra){ if(typeof r.extra[k]==='number'){ if(!extras[k]) extras[k]=[]; extras[k].push(r.extra[k]); } else { if(!extras[k]) extras[k]=[]; extras[k].push(r.extra[k]); } } });
+      return { label:c.label, rows, stats:{ count:rows.length, meanGrade:toFixedStr(meanGrade,2), meanPercent:toFixedStr(meanPct,2), median:toFixedStr(medPct,2), stdDev:toFixedStr(sdPct,2), maxGrade, minGrade, maxPercent:toFixedStr(Math.max(...(percents||[0])),2), minPercent:toFixedStr(Math.min(...(percents||[0])),2) }, cats, extras };
+    });
+
+    renderResults({teacher,school,subject,testType,totalGrade,processedClasses});
+  }catch(err){console.error(err);showMessage('خطأ أثناء التحليل: '+err.message,'error')}
+});
+
+function parsePasted(text){ const lines=text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean); return lines.map(l=>{ const parts=l.split(/[,;\t]/).map(p=>p.trim()); const obj={}; obj['اسم الطالب']=parts[0]||''; obj['الدرجة']=parts[1]||''; for(let i=2;i<parts.length;i++) obj['col'+(i-1)]=parts[i]; return obj; })}
+
+// render results
+let globalChart=null;
+function renderResults(context){
+  document.getElementById('inputSection').style.display='none';
+  document.getElementById('resultsSection').style.display='block';
+  const {teacher,school,subject,testType,totalGrade,processedClasses}=context;
+  const summaryArea=document.getElementById('summaryArea');
+  summaryArea.innerHTML = `<div class="small">المعلم: <strong>${escapeHtml(teacher)}</strong> — المدرسة: <strong>${escapeHtml(school)}</strong> — المادة: <strong>${escapeHtml(subject)}</strong> — الاختبار: <strong>${escapeHtml(testType)}</strong> — الدرجة الكلية: <strong>${totalGrade}</strong></div>`;
+
+  // chart
+  const labels=processedClasses.map(c=>c.label);
+  const avgPercents=processedClasses.map(c=>Number(c.stats.meanPercent));
+  const ctx=document.getElementById('comparisonChart').getContext('2d');
+  if(globalChart) globalChart.destroy();
+  globalChart=new Chart(ctx,{type:'bar',data:{labels,datasets:[{label:'المتوسط (%)',data:avgPercents,backgroundColor:'#3b82f6'}]},options:{responsive:true,indexAxis:'y',plugins:{legend:{display:false}}}});
+
+  // per-class
+  const perClassDiv=document.getElementById('perClassTables'); perClassDiv.innerHTML='';
+  let aggTotalStudents=0; let aggWeightedAvgSum=0; const aggCats={'ممتاز':0,'جيد جداً':0,'جيد':0,'مقبول':0,'ضعيف':0};
+  processedClasses.forEach((c,idx)=>{ aggTotalStudents += c.stats.count; aggWeightedAvgSum += Number(c.stats.meanPercent) * c.stats.count; for(const k in c.cats) aggCats[k]+=c.cats[k].length;
+    const cards = `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><div class="card"><h4>${c.label}</h4><div class="small">الطلاب: ${c.stats.count}</div><div style="font-weight:700">${c.stats.meanPercent}%</div></div><div class="card"><h4>الوسيط</h4><div class="small">${c.stats.median}%</div></div><div class="card"><h4>الانحراف</h4><div class="small">${c.stats.stdDev}%</div></div><div class="card"><h4>أعلى</h4><div class="small">${c.stats.maxGrade} (${c.stats.maxPercent}%)</div></div></div>`;
+    let tableHtml=`<h4 style="margin-top:14px">${c.label} — قائمة الطلاب</h4><div class="table-wrap"><table><thead><tr><th>الرقم</th><th>الاسم</th><th>الدرجة</th><th>النسبة</th><th>فرق عن المتوسط</th></tr></thead><tbody>`;
+    c.rows.forEach((r,i)=>{ tableHtml += `<tr><td>${i+1}</td><td>${escapeHtml(r.name)}</td><td>${r.grade}</td><td>${toFixedStr(r.percent,2)}%</td><td>${toFixedStr(r.diffFromMean,2)}</td></tr>`; });
+    tableHtml += `</tbody></table></div>`; perClassDiv.innerHTML += cards + tableHtml;
+  });
+
+  const overallAvg = aggTotalStudents? aggWeightedAvgSum/aggTotalStudents : 0;
+  const overallSdAvg = processedClasses.length? (processedClasses.reduce((a,b)=>a+Number(b.stats.stdDev),0)/processedClasses.length) : 0;
+  const best = processedClasses.reduce((a,b)=> Number(a.stats.meanPercent) >= Number(b.stats.meanPercent) ? a : b);
+  const worst = processedClasses.reduce((a,b)=> Number(a.stats.meanPercent) <= Number(b.stats.meanPercent) ? a : b);
+  const aggHtml=`<div style="margin-top:12px"><h4>قراءة ومقارنة بين الفصول</h4><div class="small">المتوسط العام المرجح: <strong>${toFixedStr(overallAvg,2)}%</strong> — متوسط الانحراف: <strong>${toFixedStr(overallSdAvg,2)}%</strong></div><div class="small" style="margin-top:6px">أفضل فصل: <strong>${best.label}</strong> — أدنى فصل: <strong>${worst.label}</strong></div></div>`;
+  document.getElementById('summaryArea').innerHTML += aggHtml;
+
+  populateCorrVarsForProcessed(processedClasses);
+
+  const reportText = buildFinalReport({teacher,school,subject,testType,totalGrade,processedClasses,overallAvg,overallSdAvg,aggCats});
+  document.getElementById('finalReport').innerText = reportText;
+
+  document.getElementById('downloadPdf').onclick = ()=> downloadPDF();
+  document.getElementById('backBtn').onclick = ()=> { document.getElementById('resultsSection').style.display='none'; document.getElementById('inputSection').style.display='block'; };
+  document.getElementById('downloadExcel').onclick = ()=> exportAllExcel(processedClasses);
+  document.getElementById('downloadWord').onclick = ()=> exportWordPlaceholder();
+
+  // store globally
+  window._processedClasses = processedClasses;
+}
+
+// correlation helpers & UI population
+function populateCorrVarsFromFiles(){
+  const idx = Number(corrClassSelect.value)-1; const cfi = classFileInputs[idx]; if(!cfi) return;
+  const headers = cfi.headers || [];
+  corrVarX.innerHTML = '<option value="">-- اختر متغير X --</option>'; corrVarY.innerHTML = '<option value="">-- اختر متغير Y --</option>';
+  headers.forEach(h=>{ corrVarX.innerHTML += `<option value="${h}">${h}</option>`; corrVarY.innerHTML += `<option value="${h}">${h}</option>`; });
+}
+function populateCorrVarsForProcessed(processedClasses){
+  corrVarX.innerHTML = '<option value="">-- اختر متغير X --</option>'; corrVarY.innerHTML = '<option value="">-- اختر متغير Y --</option>'; corrClassSelect.innerHTML = '';
+  processedClasses.forEach((c,idx)=>{ const opt=document.createElement('option'); opt.value=idx+1; opt.innerText=c.label; corrClassSelect.appendChild(opt); });
+  corrClassSelect.value = 1;
+  const firstExtras = processedClasses[0].extras; const keys = Object.keys(firstExtras || {});
+  keys.forEach(k=>{ corrVarX.innerHTML += `<option value="${k}">${k}</option>`; corrVarY.innerHTML += `<option value="${k}">${k}</option>`; });
+  corrVarX.innerHTML += `<option value="النسبة">النسبة</option>`; corrVarY.innerHTML += `<option value="الدرجة">الدرجة</option>`;
+  corrVarX.value='النسبة'; corrVarY.value='الدرجة';
+}
+
+
+
+function computeCorrelation(){
+  const mode=document.getElementById('correlationMode').value; if(!mode){ showMessage('اختر نوع معامل الارتباط أولاً.','error'); return; }
+  const classIdx=Number(document.getElementById('corrClassSelect').value)-1; if(classIdx<0){ showMessage('اختر فصلًا صالحًا أولًا.','error'); return; }
+  if(!window._processedClasses){ showMessage('البيانات غير متاحة. أعد التحليل أولًا.','error'); return; }
+  const p = window._processedClasses[classIdx]; if(!p){ showMessage('خطأ: الفصل غير موجود.','error'); return; }
+  const varX=document.getElementById('corrVarX').value; const varY=document.getElementById('corrVarY').value;
+  if(!varX||!varY){ showMessage('اختر المتغيرين المراد حساب الارتباط بينهما.','error'); return; }
+  const rows = p.rows;
+  const xArr=[]; const yArr=[];
+  for(const r of rows){
+    let xVal = (varX==='النسبة')? r.percent : (varX==='الدرجة'? r.grade : (r.extra && (r.extra[varX]!==undefined? r.extra[varX] : null)));
+    let yVal = (varY==='النسبة')? r.percent : (varY==='الدرجة'? r.grade : (r.extra && (r.extra[varY]!==undefined? r.extra[varY] : null)));
+    if(xVal===null||xVal===undefined||yVal===null||yVal===undefined) continue;
+    if(typeof xVal==='string'){ const nx=Number(xVal); if(!isNaN(nx)) xVal=nx; }
+    if(typeof yVal==='string'){ const ny=Number(yVal); if(!isNaN(ny)) yVal=ny; }
+    xArr.push(xVal); yArr.push(yVal);
+  }
+  if(xArr.length<3){ showMessage('لا توجد قيم كافية لحساب الارتباط (>=3).','error'); return; }
+  let coef=NaN; let resultText='';
+  try{
+    if(mode==='pearson'){ coef = pearsonCorr(xArr.map(Number), yArr.map(Number)); resultText = `معامل بيرسون r = ${toFixedStr(coef,3)}\n${interpretCorrelation(coef)}`; }
+    else if(mode==='spearman'){ coef = spearmanCorr(xArr.map(Number), yArr.map(Number)); resultText = `معامل سبيرمان r_s = ${toFixedStr(coef,3)}\n${interpretCorrelation(coef)}`; }
+    else if(mode==='pointbiserial'){
+      const uniqueX = Array.from(new Set(xArr)); const uniqueY = Array.from(new Set(yArr));
+      if(uniqueX.length===2 && yArr.every(v=>!isNaN(Number(v)))){ const binX = xArr.map(v=> mapToBinary(v, uniqueX)); coef = pointBiserialCorr(binX, yArr.map(Number)); }
+      else if(uniqueY.length===2 && xArr.every(v=>!isNaN(Number(v)))){ const binY = yArr.map(v=> mapToBinary(v, uniqueY)); coef = pointBiserialCorr(binY, xArr.map(Number)); }
+      else { showMessage('بايسيريال: يلزم متغير ثنائي واحد ومتغير كمّي.', 'error'); return; }
+      resultText = `معامل بايسيريال r_pb = ${toFixedStr(coef,3)}\n${interpretCorrelation(coef)}`;
+    } else if(mode==='phi'){
+      const uniqueX = Array.from(new Set(xArr)); const uniqueY = Array.from(new Set(yArr));
+      if(uniqueX.length===2 && uniqueY.length===2){ const binX = xArr.map(v=> mapToBinary(v, uniqueX)); const binY = yArr.map(v=> mapToBinary(v, uniqueY)); coef = phiCoefficient(binX, binY); resultText = `معامل فاي Φ = ${toFixedStr(coef,3)}\n${interpretCorrelation(coef)}`; }
+      else { showMessage('فاي: يلزم متغيرين ثنائيين.', 'error'); return; }
+    }
+  }catch(e){ console.error(e); showMessage('خطأ أثناء حساب الارتباط.','error'); return; }
+  document.getElementById('corrResult').innerHTML = `<h4>نتيجة تحليل الارتباط</h4><div style="white-space:pre-line;">${resultText}</div>`;
+}
+function mapToBinary(v, uniqueVals){ return (String(v) === String(uniqueVals[0])) ? 0 : 1 }
+function interpretCorrelation(c){ if(isNaN(c)) return 'لا يوجد معامل صالح.'; const a=Math.abs(c); if(a>=0.7) return 'علاقة قوية جدًا'; if(a>=0.4) return 'علاقة متوسطة'; if(a>=0.1) return 'علاقة ضعيفة'; if(a<0.1) return 'لا توجد علاقة ذات معنى عملي'; return ''; }
+
+// report builder & pedagogical readings
+function buildFinalReport({teacher,school,subject,testType,totalGrade,processedClasses,overallAvg,overallSdAvg,aggCats}){
+  let txt = `تقرير التحليل التربوي — ${escapeHtml(subject)}\n`;
+  txt += `المعلم: ${escapeHtml(teacher)} — المدرسة: ${escapeHtml(school)}\n`;
+  txt += `نوع الاختبار: ${escapeHtml(testType)} — الدرجة الكلية: ${totalGrade}\n\n`;
+  txt += `الملخص العام:\n- عدد الفصول المحللة: ${processedClasses.length}\n- المتوسط العام المرجح: ${toFixedStr(overallAvg,2)}%\n- متوسط الانحراف المعياري: ${toFixedStr(overallSdAvg,2)}%\n\n`;
+  processedClasses.forEach(pc=>{
+    txt += `--- ${pc.label} ---\nعدد الطلاب: ${pc.stats.count}\nالمتوسط: ${pc.stats.meanPercent}% — الوسيط: ${pc.stats.median}% — الانحراف: ${pc.stats.stdDev}%\nتوزيع الفئات: ممتاز(${pc.cats['ممتاز'].length}) — جيد جداً(${pc.cats['جيد جداً'].length}) — جيد(${pc.cats['جيد'].length}) — مقبول(${pc.cats['مقبول'].length}) — ضعيف(${pc.cats['ضعيف'].length})\n`;
+    txt += pedagogicalReading(pc) + '\n';
+  });
+  txt += `الملخص العام والتوصيات:\n` + aggregatedRecommendations(aggCats, overallAvg, overallSdAvg);
+  txt += `\nتم إعداد التقرير بواسطة: ${escapeHtml(document.getElementById('teacherName').value)}\nتاريخ: ${new Date().toLocaleDateString('ar-EG')}\n`;
+  return txt;
+}
+function pedagogicalReading(pc){
+  const meanPct = Number(pc.stats.meanPercent); const med=Number(pc.stats.median); const sd=Number(pc.stats.stdDev);
+  let r=''; if(Math.abs(meanPct-med)<3) r+='- تقارب المتوسط والوسيط يدل على توزيع متقارب للأداء.\n'; else if(med>meanPct) r+='- الوسيط أعلى من المتوسط؛ قد يوجد عدد من الطلبة الأعلى أداء أو العكس.\n'; else r+='- المتوسط أعلى من الوسيط؛ قد تؤثر مجموعة متفوقة على المتوسط.\n';
+  if(sd>=20) r+='- الانحراف المعياري مرتفع → تفاوت كبير؛ أوصي بتدخلات فردية ومجموعات دعم.\n'; else if(sd>=10) r+='- انحراف معياري متوسط → تطبيق تعليم متباين.\n'; else r+='- انحراف منخفض → استقرار مستويات؛ فكّر في إثراء المتفوقين.\n';
+  const most = Object.keys(pc.cats).reduce((a,b)=> pc.cats[b].length > pc.cats[a].length ? b : a, 'ممتاز');
+  r += `- الفئة الأكثر: ${most} — ضع استراتيجيات ملائمة لهذه الفئة.\n`;
+  if(meanPct<60){ r += '- قصيرة المدى: جلسات دعم أسبوعية مركزة.\n- متوسطة: تعديل خطة الوحدة.\n- طويلة: مراجعة بنية المنهج.\n'; }
+  else if(meanPct<75){ r += '- قصيرة: أنشطة مراجعة تفاعلية.\n- متوسطة: مجموعات تعلم متباينة.\n- طويلة: بناء بنك مسائل.\n'; }
+  else { r += '- قصيرة: أنشطة إثرائية.\n- متوسطة: مسابقات معرفية.\n- طويلة: خطط تطوير مهني.\n'; }
+  return r;
+}
+function aggregatedRecommendations(aggCats, overallAvg, overallSdAvg){
+  let s=''; const most = Object.keys(aggCats).reduce((a,b)=> aggCats[b] > aggCats[a] ? b : a, 'ممتاز'); s+=`- أكثر الفئات تكرارًا: ${most} (${aggCats[most]} طالب).\n`;
+  if(overallAvg<60) s+='- توصية: خطة دعم شاملة ومتابعة أسبوعية.\n'; else if(overallAvg<75) s+='- توصية: تعزيز الاستراتيجيات التفاعلية.\n'; else s+='- توصية: تقديم إثراءات وتحفيز.\n';
+  if(overallSdAvg>=15) s+='- ملاحظة: تفاوت واضح — انقل ممارسات ناجحة بين الفصول.\n';
+  return s;
+}
+
+// export & print
+function downloadPDF(){ document.querySelectorAll('.no-print').forEach(el=>el.style.display='none'); const opt={margin:10,filename:`تقرير_التحليل_${new Date().toISOString().slice(0,10)}.pdf`,image:{type:'jpeg',quality:0.98},html2canvas:{scale:2},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}}; html2pdf().set(opt).from(document.querySelector('.container')).save().then(()=>{ document.querySelectorAll('.no-print').forEach(el=>el.style.display=''); }).catch(()=>{ document.querySelectorAll('.no-print').forEach(el=>el.style.display=''); alert('خطأ في إنشاء PDF'); });}
+function exportAllExcel(processedClasses){ const wb=XLSX.utils.book_new(); processedClasses.forEach(pc=>{ const wsData=[['الرقم','الاسم','الدرجة','النسبة','الفئة','فرق عن المتوسط']]; pc.rows.forEach((r,i)=> wsData.push([i+1,r.name,r.grade,toFixedStr(r.percent,2),r.category,toFixedStr(r.diffFromMean,2)])); const ws=XLSX.utils.aoa_to_sheet(wsData); XLSX.utils.book_append_sheet(wb,ws,pc.label)}); XLSX.writeFile(wb,`النتائج_المصنفة_${new Date().toISOString().slice(0,10)}.xlsx`)}
+function exportWordPlaceholder(){ const txt=document.getElementById('finalReport').innerText; alert('نسخة التقرير جاهزة — انسخ النص والصقه في Word. للتصدير التلقائي لـ .docx يمكن إضافته لاحقًا.'); console.log(txt)}
+
+// messages & helpers
+function showMessage(msg,type='info'){ const el=document.getElementById('message'); el.innerText=msg; el.style.padding='10px'; el.style.borderRadius='6px'; if(type==='error'){ el.style.background='#ffeef0'; el.style.color='#b02a37' } else { el.style.background='#e9f8f0'; el.style.color='#0b7038' } setTimeout(()=>{ el.innerText=''; el.style.background=''; el.style.color=''; el.style.padding='' },7000) }
+function clearMessages(){ document.getElementById('message').innerText='' }
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
+
+// reset
+document.getElementById('resetBtn').addEventListener('click', ()=>{ if(confirm('مسح كل الحقول والنتائج؟')) location.reload(); });
+
+// populateCorrVars when corr class changes (file-based)
+document.getElementById('corrClassSelect').addEventListener('change', populateCorrVarsFromFiles);
+
+// Initialize correlation button and set up functionality
+function initCorrelation(){
+  const corrHint = document.getElementById('corrHint');
+  const computeCorrBtn = document.createElement('button');
+  computeCorrBtn.style.marginTop='8px';
+  computeCorrBtn.className='no-print';
+  computeCorrBtn.innerText='احسب معامل الارتباط';
+  computeCorrBtn.onclick = ()=> computeCorrelation();
+  corrHint.appendChild(computeCorrBtn);
+}
+
+// Initialize everything when DOM is loaded
+document.addEventListener('DOMContentLoaded', ()=>{ 
+  buildFileInputs(); 
+  initCorrelation();
+});
+</script>
+</body>
+</html>
