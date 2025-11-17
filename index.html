@@ -12,31 +12,434 @@
 
 <style>
   :root{
-    --bg:#f7f9fb; --primary:#3b82f6; --muted:#64748b; --accent:#22c55e; --card:#ffffff;
+    --bg: #f0f8ff;
+    --primary: #2563eb;
+    --primary-dark: #1e40af;
+    --secondary: #10b981;
+    --accent: #f59e0b;
+    --muted: #64748b;
+    --card: #ffffff;
+    --border: #e2e8f0;
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --text: #1e293b;
+    --text-light: #64748b;
   }
-  *{box-sizing:border-box}
-  body{font-family:'Cairo',sans-serif;background:var(--bg);color:#0b243f;margin:0;padding:18px;}
-  .container{max-width:1200px;margin:0 auto;background:var(--card);border-radius:10px;box-shadow:0 12px 30px rgba(2,6,23,0.06);overflow:hidden}
-  header{background:linear-gradient(120deg,var(--primary),#0b5ea8);color:#fff;padding:18px;text-align:center}
-  header h1{margin:0;font-size:1.35rem}
-  header .sub{opacity:0.95;margin-top:6px}
-  .section{padding:18px}
-  .grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
-  label{display:block;margin-bottom:6px;font-weight:600}
-  input[type="text"],input[type="number"],select,textarea{width:100%;padding:10px;border:1px solid #e6eef7;border-radius:8px;font-size:1rem}
-  button{padding:10px 14px;border-radius:8px;border:0;background:var(--primary);color:#fff;cursor:pointer}
-  .small{font-size:0.92rem;color:var(--muted)}
-  .upload-box{border:2px dashed #dbeafe;padding:12px;border-radius:8px;background:#f8fbff;text-align:center}
-  .card{background:#f1f8ff;padding:12px;border-radius:8px;text-align:center}
-  .table-wrap{margin-top:12px;overflow:auto}
-  table{width:100%;border-collapse:collapse;border:1px solid #eef6ff;font-size:0.95rem}
-  th,td{padding:8px 10px;border:1px solid #f1f8ff;text-align:center}
-  th{background:var(--primary);color:#fff}
-  .report{background:#fff;padding:12px;border-left:4px solid var(--accent);margin-top:12px;white-space:pre-line}
-  .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-  .export{background:var(--accent);color:#fff;padding:10px 12px;border-radius:8px;border:0;cursor:pointer}
-  .no-print{display:inline-block}
-  @media print{.no-print{display:none!important}.container{box-shadow:none}}
+  
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 20px;
+  }
+  
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: var(--card);
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+  }
+  
+  header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    padding: 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+    opacity: 0.1;
+  }
+  
+  header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+    position: relative;
+  }
+  
+  header .sub {
+    opacity: 0.9;
+    margin-top: 8px;
+    font-size: 1.1rem;
+    position: relative;
+  }
+  
+  .section {
+    padding: 24px;
+  }
+  
+  .section-title {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    color: var(--primary);
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 10px;
+    position: relative;
+  }
+  
+  .section-title::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    right: 0;
+    width: 80px;
+    height: 2px;
+    background: var(--secondary);
+  }
+  
+  .grid {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  
+  input[type="text"],
+  input[type="number"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: 'Cairo', sans-serif;
+    transition: all 0.3s;
+  }
+  
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+  
+  button {
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: 0;
+    background: var(--primary);
+    color: white;
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  button:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  button.secondary {
+    background: var(--secondary);
+  }
+  
+  button.secondary:hover {
+    background: #0da271;
+  }
+  
+  button.danger {
+    background: var(--danger);
+  }
+  
+  button.danger:hover {
+    background: #dc2626;
+  }
+  
+  button.accent {
+    background: var(--accent);
+  }
+  
+  button.accent:hover {
+    background: #d97706;
+  }
+  
+  .small {
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  
+  .upload-box {
+    border: 2px dashed #c7d2fe;
+    padding: 20px;
+    border-radius: 10px;
+    background: #f8faff;
+    text-align: center;
+    transition: all 0.3s;
+  }
+  
+  .upload-box:hover {
+    border-color: var(--primary);
+    background: #f0f4ff;
+  }
+  
+  .card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border);
+    transition: all 0.3s;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+  }
+  
+  .stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid var(--primary);
+  }
+  
+  .stat-card h3 {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  
+  .stat-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary);
+  }
+  
+  .stat-detail {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 5px;
+  }
+  
+  .table-wrap {
+    margin-top: 20px;
+    overflow: auto;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+  
+  th, td {
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+  }
+  
+  th {
+    background: var(--primary);
+    color: white;
+    font-weight: 600;
+  }
+  
+  tr:nth-child(even) {
+    background: #f8fafc;
+  }
+  
+  tr:hover {
+    background: #f1f5f9;
+  }
+  
+  .report {
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 10px;
+    border-right: 4px solid var(--secondary);
+    margin-top: 20px;
+    white-space: pre-line;
+    line-height: 1.8;
+  }
+  
+  .controls {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  
+  .export {
+    background: var(--secondary);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: 0;
+    cursor: pointer;
+  }
+  
+  .no-print {
+    display: inline-block;
+  }
+  
+  .print-only {
+    display: none;
+  }
+  
+  .charts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+  }
+  
+  .chart-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border);
+  }
+  
+  .chart-title {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    text-align: center;
+    color: var(--primary);
+    font-weight: 600;
+  }
+  
+  .message {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 10px 0;
+    font-weight: 500;
+  }
+  
+  .message.success {
+    background: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+  }
+  
+  .message.error {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+  }
+  
+  .message.info {
+    background: #eff6ff;
+    color: #1e40af;
+    border: 1px solid #dbeafe;
+  }
+  
+  .correlation-result {
+    background: #f0f9ff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+    border-left: 4px solid var(--accent);
+  }
+  
+  @media (max-width: 768px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .charts-container {
+      grid-template-columns: 1fr;
+    }
+    
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .controls {
+      flex-direction: column;
+    }
+    
+    button {
+      width: 100%;
+    }
+  }
+  
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+    
+    .print-only {
+      display: block;
+    }
+    
+    .container {
+      box-shadow: none;
+      border-radius: 0;
+    }
+    
+    .section {
+      padding: 15px;
+    }
+    
+    button {
+      display: none;
+    }
+    
+    .card, .stat-card {
+      box-shadow: none;
+      border: 1px solid #ddd;
+    }
+    
+    .charts-container {
+      break-inside: avoid;
+    }
+    
+    table {
+      break-inside: avoid;
+    }
+    
+    .report {
+      break-inside: avoid;
+    }
+  }
 </style>
 </head>
 <body>
@@ -48,8 +451,8 @@
 
   <!-- INPUT SECTION -->
   <div class="section no-print" id="inputSection">
-    <h3>إعداد الاختبار وإدخال البيانات</h3>
-    <div class="grid" style="margin-top:8px">
+    <h3 class="section-title">إعداد الاختبار وإدخال البيانات</h3>
+    <div class="grid" style="margin-top:12px">
       <div>
         <label>اسم المعلم</label>
         <input id="teacherName" type="text" value="محمد الحربي" />
@@ -89,13 +492,13 @@
       </div>
     </div>
 
-    <div style="margin-top:12px">
+    <div style="margin-top:20px">
       <label>إدخال بيانات الفصول</label>
       <div id="filesArea"></div>
-      <div class="small" style="margin-top:6px">يمكن رفع ملف Excel لكل فصل (عمودان على الأقل: "اسم الطالب" و"الدرجة")، أو لصق البيانات دفعة واحدة بصيغة: الاسم,الدرجة,عمودX,...</div>
+      <div class="small" style="margin-top:8px">يمكن رفع ملف Excel لكل فصل (عمودان على الأقل: "اسم الطالب" و"الدرجة")، أو لصق البيانات دفعة واحدة بصيغة: الاسم,الدرجة,عمودX,...</div>
     </div>
 
-    <div style="margin-top:12px">
+    <div style="margin-top:20px">
       <label>تحليل ارتباط (اختياري)</label>
       <div class="grid">
         <div>
@@ -120,33 +523,52 @@
           <select id="corrVarY"><option value="">— اختر بعد رفع الملف —</option></select>
         </div>
       </div>
-      <div id="corrHint" class="small" style="margin-top:8px">بعد رفع الملفات سيعرض لك الأعمدة المتاحة للاختيار.</div>
+      <div id="corrHint" class="small" style="margin-top:10px">بعد رفع الملفات سيعرض لك الأعمدة المتاحة للاختيار.</div>
     </div>
 
-    <div style="margin-top:14px;display:flex;gap:10px">
-      <button id="analyzeBtn">تحليل تربوي متقدم</button>
-      <button id="resetBtn" class="no-print" style="background:#e74c3c">إعادة ضبط</button>
+    <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
+      <button id="analyzeBtn" class="secondary">تحليل تربوي متقدم</button>
+      <button id="resetBtn" class="danger">إعادة ضبط</button>
     </div>
 
-    <div id="message" style="margin-top:12px"></div>
+    <div id="message" style="margin-top:15px"></div>
   </div>
 
   <!-- RESULTS SECTION -->
   <div class="section" id="resultsSection" style="display:none">
-    <h3>نتائج وتحليلات</h3>
+    <h3 class="section-title">نتائج وتحليلات</h3>
     <div id="summaryArea"></div>
-    <div id="chartsArea" style="margin-top:10px">
-      <canvas id="comparisonChart" style="max-height:320px"></canvas>
+    
+    <div class="stats-grid" id="overallStats"></div>
+    
+    <div class="charts-container">
+      <div class="chart-card">
+        <div class="chart-title">مقارنة متوسطات الفصول</div>
+        <canvas id="comparisonChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">توزيع الدرجات</div>
+        <canvas id="distributionChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">التصنيف حسب الفئات</div>
+        <canvas id="categoryChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">مقارنة التباين بين الفصول</div>
+        <canvas id="varianceChart"></canvas>
+      </div>
     </div>
-    <div id="perClassTables" style="margin-top:12px"></div>
-    <div id="corrResult" style="margin-top:12px"></div>
-    <div class="report" id="finalReport" style="margin-top:12px"></div>
+    
+    <div id="perClassTables" style="margin-top:20px"></div>
+    <div id="corrResult" style="margin-top:20px"></div>
+    <div class="report" id="finalReport" style="margin-top:20px"></div>
 
     <div class="controls no-print">
-      <button class="export" id="downloadPdf">تنزيل تقرير PDF</button>
-      <button class="export" id="downloadExcel">تنزيل Excel مُصَنَّف</button>
-      <button class="export" id="downloadWord">تنزيل Word (نسخة بسيطة)</button>
-      <button class="export" id="backBtn" style="background:#9b59b6">العودة للتعديل</button>
+      <button class="export" id="downloadPdf">📄 تنزيل تقرير PDF</button>
+      <button class="export" id="downloadExcel">📊 تنزيل Excel مُصَنَّف</button>
+      <button class="export" id="printReport">🖨️ طباعة التقرير</button>
+      <button class="accent" id="backBtn">↩️ العودة للتعديل</button>
     </div>
   </div>
 </div>
@@ -157,6 +579,39 @@ function toFixedStr(n,d=2){return Number(n).toFixed(d)}
 function mean(a){return a.reduce((s,x)=>s+x,0)/a.length}
 function median(a){const s=[...a].sort((x,y)=>x-y);const m=Math.floor(s.length/2);return s.length%2? s[m] : (s[m-1]+s[m])/2}
 function stdPop(a){const m=mean(a);return Math.sqrt(a.reduce((s,x)=>s+Math.pow(x-m,2),0)/a.length)}
+function mode(arr) {
+  const freq = {};
+  let maxFreq = 0;
+  let modes = [];
+  
+  for (const val of arr) {
+    freq[val] = (freq[val] || 0) + 1;
+    if (freq[val] > maxFreq) {
+      maxFreq = freq[val];
+      modes = [val];
+    } else if (freq[val] === maxFreq) {
+      modes.push(val);
+    }
+  }
+  
+  return modes.length === arr.length ? [] : modes;
+}
+function range(a){return Math.max(...a)-Math.min(...a)}
+function coefficientOfVariation(a){const m=mean(a);return m===0?0:(stdPop(a)/m)*100}
+function skewness(a){const m=mean(a);const s=stdPop(a);if(s===0)return 0;return a.reduce((sum,x)=>sum+Math.pow((x-m)/s,3),0)/a.length}
+function kurtosis(a){const m=mean(a);const s=stdPop(a);if(s===0)return 0;return a.reduce((sum,x)=>sum+Math.pow((x-m)/s,4),0)/a.length-3}
+function quartile(a, q) {
+  const sorted = [...a].sort((x, y) => x - y);
+  const pos = (sorted.length - 1) * q;
+  const base = Math.floor(pos);
+  const rest = pos - base;
+  
+  if (sorted[base + 1] !== undefined) {
+    return sorted[base] + rest * (sorted[base + 1] - sorted[base]);
+  } else {
+    return sorted[base];
+  }
+}
 function rankArray(arr){const sorted=arr.map((v,i)=>({v,i})).sort((a,b)=>a.v-b.v);const ranks=[];for(let i=0;i<sorted.length;i++)ranks[sorted[i].i]=i+1;return ranks}
 function pearsonCorr(x,y){if(x.length!==y.length||x.length===0) return NaN;const mx=mean(x), my=mean(y);let num=0,dx=0,dy=0;for(let i=0;i<x.length;i++){num+=(x[i]-mx)*(y[i]-my);dx+=(x[i]-mx)*(x[i]-mx);dy+=(y[i]-my)*(y[i]-my);}return num/Math.sqrt(dx*dy)}
 function spearmanCorr(x,y){return pearsonCorr(rankArray(x), rankArray(y))}
@@ -175,12 +630,12 @@ let classFileInputs = []; // {fileInput,pasteArea,headers,sheetJson,classIndex}
 function buildFileInputs(){
   filesArea.innerHTML=''; classFileInputs=[]; const count=Number(classCountSelect.value);
   for(let i=1;i<=count;i++){
-    const div=document.createElement('div'); div.style.marginTop='8px';
+    const div=document.createElement('div'); div.style.marginTop='12px';
     div.innerHTML=`
       <div style="display:flex;gap:10px;align-items:center">
         <strong>فصل ${i}</strong>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px">
         <div class="upload-box">
           <input type="file" accept=".xlsx,.xls" class="classFileInput" data-class="${i}">
           <div class="small">أو الصق أسفل الجدول</div>
@@ -265,188 +720,46 @@ document.getElementById('analyzeBtn').addEventListener('click', async ()=>{
       const sdPct=percents.length? stdPop(percents):0;
       const maxGrade=grades.length? Math.max(...grades):0;
       const minGrade=grades.length? Math.min(...grades):0;
+      const modeGrade = grades.length ? mode(grades) : [];
+      const rangeGrade = grades.length ? range(grades) : 0;
+      const cv = grades.length ? coefficientOfVariation(grades) : 0;
+      const skew = grades.length ? skewness(grades) : 0;
+      const kurt = grades.length ? kurtosis(grades) : 0;
+      const q1 = grades.length ? quartile(grades, 0.25) : 0;
+      const q3 = grades.length ? quartile(grades, 0.75) : 0;
+      const iqr = grades.length ? q3 - q1 : 0;
+      
       const cats={'ممتاز':[],'جيد جداً':[],'جيد':[],'مقبول':[],'ضعيف':[]};
       const rows=limited.map(r=>{const pct=(r.grade/totalG)*100; const cat=classifyPercent(pct); const diff=pct-meanPct; const out={...r,percent:pct,category:cat,diffFromMean:diff}; cats[cat].push(out); return out;});
       const extras={};
       rows.forEach(r=>{ for(const k in r.extra){ if(typeof r.extra[k]==='number'){ if(!extras[k]) extras[k]=[]; extras[k].push(r.extra[k]); } else { if(!extras[k]) extras[k]=[]; extras[k].push(r.extra[k]); } } });
-      return { label:c.label, rows, stats:{ count:rows.length, meanGrade:toFixedStr(meanGrade,2), meanPercent:toFixedStr(meanPct,2), median:toFixedStr(medPct,2), stdDev:toFixedStr(sdPct,2), maxGrade, minGrade, maxPercent:toFixedStr(Math.max(...(percents||[0])),2), minPercent:toFixedStr(Math.min(...(percents||[0])),2) }, cats, extras };
+      return { 
+        label:c.label, 
+        rows, 
+        stats:{ 
+          count:rows.length, 
+          meanGrade:toFixedStr(meanGrade,2), 
+          meanPercent:toFixedStr(meanPct,2), 
+          median:toFixedStr(medPct,2), 
+          stdDev:toFixedStr(sdPct,2), 
+          maxGrade, 
+          minGrade, 
+          maxPercent:toFixedStr(Math.max(...(percents||[0])),2), 
+          minPercent:toFixedStr(Math.min(...(percents||[0])),2),
+          mode: modeGrade.length > 0 ? modeGrade.map(m => toFixedStr(m, 2)).join(', ') : 'لا يوجد',
+          range: toFixedStr(rangeGrade, 2),
+          coefficientOfVariation: toFixedStr(cv, 2),
+          skewness: toFixedStr(skew, 3),
+          kurtosis: toFixedStr(kurt, 3),
+          q1: toFixedStr(q1, 2),
+          q3: toFixedStr(q3, 2),
+          iqr: toFixedStr(iqr, 2)
+        }, 
+        cats, 
+        extras 
+      };
     });
 
     renderResults({teacher,school,subject,testType,totalGrade,processedClasses});
   }catch(err){console.error(err);showMessage('خطأ أثناء التحليل: '+err.message,'error')}
 });
-
-function parsePasted(text){ const lines=text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean); return lines.map(l=>{ const parts=l.split(/[,;\t]/).map(p=>p.trim()); const obj={}; obj['اسم الطالب']=parts[0]||''; obj['الدرجة']=parts[1]||''; for(let i=2;i<parts.length;i++) obj['col'+(i-1)]=parts[i]; return obj; })}
-
-// render results
-let globalChart=null;
-function renderResults(context){
-  document.getElementById('inputSection').style.display='none';
-  document.getElementById('resultsSection').style.display='block';
-  const {teacher,school,subject,testType,totalGrade,processedClasses}=context;
-  const summaryArea=document.getElementById('summaryArea');
-  summaryArea.innerHTML = `<div class="small">المعلم: <strong>${escapeHtml(teacher)}</strong> — المدرسة: <strong>${escapeHtml(school)}</strong> — المادة: <strong>${escapeHtml(subject)}</strong> — الاختبار: <strong>${escapeHtml(testType)}</strong> — الدرجة الكلية: <strong>${totalGrade}</strong></div>`;
-
-  // chart
-  const labels=processedClasses.map(c=>c.label);
-  const avgPercents=processedClasses.map(c=>Number(c.stats.meanPercent));
-  const ctx=document.getElementById('comparisonChart').getContext('2d');
-  if(globalChart) globalChart.destroy();
-  globalChart=new Chart(ctx,{type:'bar',data:{labels,datasets:[{label:'المتوسط (%)',data:avgPercents,backgroundColor:'#3b82f6'}]},options:{responsive:true,indexAxis:'y',plugins:{legend:{display:false}}}});
-
-  // per-class
-  const perClassDiv=document.getElementById('perClassTables'); perClassDiv.innerHTML='';
-  let aggTotalStudents=0; let aggWeightedAvgSum=0; const aggCats={'ممتاز':0,'جيد جداً':0,'جيد':0,'مقبول':0,'ضعيف':0};
-  processedClasses.forEach((c,idx)=>{ aggTotalStudents += c.stats.count; aggWeightedAvgSum += Number(c.stats.meanPercent) * c.stats.count; for(const k in c.cats) aggCats[k]+=c.cats[k].length;
-    const cards = `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><div class="card"><h4>${c.label}</h4><div class="small">الطلاب: ${c.stats.count}</div><div style="font-weight:700">${c.stats.meanPercent}%</div></div><div class="card"><h4>الوسيط</h4><div class="small">${c.stats.median}%</div></div><div class="card"><h4>الانحراف</h4><div class="small">${c.stats.stdDev}%</div></div><div class="card"><h4>أعلى</h4><div class="small">${c.stats.maxGrade} (${c.stats.maxPercent}%)</div></div></div>`;
-    let tableHtml=`<h4 style="margin-top:14px">${c.label} — قائمة الطلاب</h4><div class="table-wrap"><table><thead><tr><th>الرقم</th><th>الاسم</th><th>الدرجة</th><th>النسبة</th><th>فرق عن المتوسط</th></tr></thead><tbody>`;
-    c.rows.forEach((r,i)=>{ tableHtml += `<tr><td>${i+1}</td><td>${escapeHtml(r.name)}</td><td>${r.grade}</td><td>${toFixedStr(r.percent,2)}%</td><td>${toFixedStr(r.diffFromMean,2)}</td></tr>`; });
-    tableHtml += `</tbody></table></div>`; perClassDiv.innerHTML += cards + tableHtml;
-  });
-
-  const overallAvg = aggTotalStudents? aggWeightedAvgSum/aggTotalStudents : 0;
-  const overallSdAvg = processedClasses.length? (processedClasses.reduce((a,b)=>a+Number(b.stats.stdDev),0)/processedClasses.length) : 0;
-  const best = processedClasses.reduce((a,b)=> Number(a.stats.meanPercent) >= Number(b.stats.meanPercent) ? a : b);
-  const worst = processedClasses.reduce((a,b)=> Number(a.stats.meanPercent) <= Number(b.stats.meanPercent) ? a : b);
-  const aggHtml=`<div style="margin-top:12px"><h4>قراءة ومقارنة بين الفصول</h4><div class="small">المتوسط العام المرجح: <strong>${toFixedStr(overallAvg,2)}%</strong> — متوسط الانحراف: <strong>${toFixedStr(overallSdAvg,2)}%</strong></div><div class="small" style="margin-top:6px">أفضل فصل: <strong>${best.label}</strong> — أدنى فصل: <strong>${worst.label}</strong></div></div>`;
-  document.getElementById('summaryArea').innerHTML += aggHtml;
-
-  populateCorrVarsForProcessed(processedClasses);
-
-  const reportText = buildFinalReport({teacher,school,subject,testType,totalGrade,processedClasses,overallAvg,overallSdAvg,aggCats});
-  document.getElementById('finalReport').innerText = reportText;
-
-  document.getElementById('downloadPdf').onclick = ()=> downloadPDF();
-  document.getElementById('backBtn').onclick = ()=> { document.getElementById('resultsSection').style.display='none'; document.getElementById('inputSection').style.display='block'; };
-  document.getElementById('downloadExcel').onclick = ()=> exportAllExcel(processedClasses);
-  document.getElementById('downloadWord').onclick = ()=> exportWordPlaceholder();
-
-  // store globally
-  window._processedClasses = processedClasses;
-}
-
-// correlation helpers & UI population
-function populateCorrVarsFromFiles(){
-  const idx = Number(corrClassSelect.value)-1; const cfi = classFileInputs[idx]; if(!cfi) return;
-  const headers = cfi.headers || [];
-  corrVarX.innerHTML = '<option value="">-- اختر متغير X --</option>'; corrVarY.innerHTML = '<option value="">-- اختر متغير Y --</option>';
-  headers.forEach(h=>{ corrVarX.innerHTML += `<option value="${h}">${h}</option>`; corrVarY.innerHTML += `<option value="${h}">${h}</option>`; });
-}
-function populateCorrVarsForProcessed(processedClasses){
-  corrVarX.innerHTML = '<option value="">-- اختر متغير X --</option>'; corrVarY.innerHTML = '<option value="">-- اختر متغير Y --</option>'; corrClassSelect.innerHTML = '';
-  processedClasses.forEach((c,idx)=>{ const opt=document.createElement('option'); opt.value=idx+1; opt.innerText=c.label; corrClassSelect.appendChild(opt); });
-  corrClassSelect.value = 1;
-  const firstExtras = processedClasses[0].extras; const keys = Object.keys(firstExtras || {});
-  keys.forEach(k=>{ corrVarX.innerHTML += `<option value="${k}">${k}</option>`; corrVarY.innerHTML += `<option value="${k}">${k}</option>`; });
-  corrVarX.innerHTML += `<option value="النسبة">النسبة</option>`; corrVarY.innerHTML += `<option value="الدرجة">الدرجة</option>`;
-  corrVarX.value='النسبة'; corrVarY.value='الدرجة';
-}
-
-
-
-function computeCorrelation(){
-  const mode=document.getElementById('correlationMode').value; if(!mode){ showMessage('اختر نوع معامل الارتباط أولاً.','error'); return; }
-  const classIdx=Number(document.getElementById('corrClassSelect').value)-1; if(classIdx<0){ showMessage('اختر فصلًا صالحًا أولًا.','error'); return; }
-  if(!window._processedClasses){ showMessage('البيانات غير متاحة. أعد التحليل أولًا.','error'); return; }
-  const p = window._processedClasses[classIdx]; if(!p){ showMessage('خطأ: الفصل غير موجود.','error'); return; }
-  const varX=document.getElementById('corrVarX').value; const varY=document.getElementById('corrVarY').value;
-  if(!varX||!varY){ showMessage('اختر المتغيرين المراد حساب الارتباط بينهما.','error'); return; }
-  const rows = p.rows;
-  const xArr=[]; const yArr=[];
-  for(const r of rows){
-    let xVal = (varX==='النسبة')? r.percent : (varX==='الدرجة'? r.grade : (r.extra && (r.extra[varX]!==undefined? r.extra[varX] : null)));
-    let yVal = (varY==='النسبة')? r.percent : (varY==='الدرجة'? r.grade : (r.extra && (r.extra[varY]!==undefined? r.extra[varY] : null)));
-    if(xVal===null||xVal===undefined||yVal===null||yVal===undefined) continue;
-    if(typeof xVal==='string'){ const nx=Number(xVal); if(!isNaN(nx)) xVal=nx; }
-    if(typeof yVal==='string'){ const ny=Number(yVal); if(!isNaN(ny)) yVal=ny; }
-    xArr.push(xVal); yArr.push(yVal);
-  }
-  if(xArr.length<3){ showMessage('لا توجد قيم كافية لحساب الارتباط (>=3).','error'); return; }
-  let coef=NaN; let resultText='';
-  try{
-    if(mode==='pearson'){ coef = pearsonCorr(xArr.map(Number), yArr.map(Number)); resultText = `معامل بيرسون r = ${toFixedStr(coef,3)}\n${interpretCorrelation(coef)}`; }
-    else if(mode==='spearman'){ coef = spearmanCorr(xArr.map(Number), yArr.map(Number)); resultText = `معامل سبيرمان r_s = ${toFixedStr(coef,3)}\n${interpretCorrelation(coef)}`; }
-    else if(mode==='pointbiserial'){
-      const uniqueX = Array.from(new Set(xArr)); const uniqueY = Array.from(new Set(yArr));
-      if(uniqueX.length===2 && yArr.every(v=>!isNaN(Number(v)))){ const binX = xArr.map(v=> mapToBinary(v, uniqueX)); coef = pointBiserialCorr(binX, yArr.map(Number)); }
-      else if(uniqueY.length===2 && xArr.every(v=>!isNaN(Number(v)))){ const binY = yArr.map(v=> mapToBinary(v, uniqueY)); coef = pointBiserialCorr(binY, xArr.map(Number)); }
-      else { showMessage('بايسيريال: يلزم متغير ثنائي واحد ومتغير كمّي.', 'error'); return; }
-      resultText = `معامل بايسيريال r_pb = ${toFixedStr(coef,3)}\n${interpretCorrelation(coef)}`;
-    } else if(mode==='phi'){
-      const uniqueX = Array.from(new Set(xArr)); const uniqueY = Array.from(new Set(yArr));
-      if(uniqueX.length===2 && uniqueY.length===2){ const binX = xArr.map(v=> mapToBinary(v, uniqueX)); const binY = yArr.map(v=> mapToBinary(v, uniqueY)); coef = phiCoefficient(binX, binY); resultText = `معامل فاي Φ = ${toFixedStr(coef,3)}\n${interpretCorrelation(coef)}`; }
-      else { showMessage('فاي: يلزم متغيرين ثنائيين.', 'error'); return; }
-    }
-  }catch(e){ console.error(e); showMessage('خطأ أثناء حساب الارتباط.','error'); return; }
-  document.getElementById('corrResult').innerHTML = `<h4>نتيجة تحليل الارتباط</h4><div style="white-space:pre-line;">${resultText}</div>`;
-}
-function mapToBinary(v, uniqueVals){ return (String(v) === String(uniqueVals[0])) ? 0 : 1 }
-function interpretCorrelation(c){ if(isNaN(c)) return 'لا يوجد معامل صالح.'; const a=Math.abs(c); if(a>=0.7) return 'علاقة قوية جدًا'; if(a>=0.4) return 'علاقة متوسطة'; if(a>=0.1) return 'علاقة ضعيفة'; if(a<0.1) return 'لا توجد علاقة ذات معنى عملي'; return ''; }
-
-// report builder & pedagogical readings
-function buildFinalReport({teacher,school,subject,testType,totalGrade,processedClasses,overallAvg,overallSdAvg,aggCats}){
-  let txt = `تقرير التحليل التربوي — ${escapeHtml(subject)}\n`;
-  txt += `المعلم: ${escapeHtml(teacher)} — المدرسة: ${escapeHtml(school)}\n`;
-  txt += `نوع الاختبار: ${escapeHtml(testType)} — الدرجة الكلية: ${totalGrade}\n\n`;
-  txt += `الملخص العام:\n- عدد الفصول المحللة: ${processedClasses.length}\n- المتوسط العام المرجح: ${toFixedStr(overallAvg,2)}%\n- متوسط الانحراف المعياري: ${toFixedStr(overallSdAvg,2)}%\n\n`;
-  processedClasses.forEach(pc=>{
-    txt += `--- ${pc.label} ---\nعدد الطلاب: ${pc.stats.count}\nالمتوسط: ${pc.stats.meanPercent}% — الوسيط: ${pc.stats.median}% — الانحراف: ${pc.stats.stdDev}%\nتوزيع الفئات: ممتاز(${pc.cats['ممتاز'].length}) — جيد جداً(${pc.cats['جيد جداً'].length}) — جيد(${pc.cats['جيد'].length}) — مقبول(${pc.cats['مقبول'].length}) — ضعيف(${pc.cats['ضعيف'].length})\n`;
-    txt += pedagogicalReading(pc) + '\n';
-  });
-  txt += `الملخص العام والتوصيات:\n` + aggregatedRecommendations(aggCats, overallAvg, overallSdAvg);
-  txt += `\nتم إعداد التقرير بواسطة: ${escapeHtml(document.getElementById('teacherName').value)}\nتاريخ: ${new Date().toLocaleDateString('ar-EG')}\n`;
-  return txt;
-}
-function pedagogicalReading(pc){
-  const meanPct = Number(pc.stats.meanPercent); const med=Number(pc.stats.median); const sd=Number(pc.stats.stdDev);
-  let r=''; if(Math.abs(meanPct-med)<3) r+='- تقارب المتوسط والوسيط يدل على توزيع متقارب للأداء.\n'; else if(med>meanPct) r+='- الوسيط أعلى من المتوسط؛ قد يوجد عدد من الطلبة الأعلى أداء أو العكس.\n'; else r+='- المتوسط أعلى من الوسيط؛ قد تؤثر مجموعة متفوقة على المتوسط.\n';
-  if(sd>=20) r+='- الانحراف المعياري مرتفع → تفاوت كبير؛ أوصي بتدخلات فردية ومجموعات دعم.\n'; else if(sd>=10) r+='- انحراف معياري متوسط → تطبيق تعليم متباين.\n'; else r+='- انحراف منخفض → استقرار مستويات؛ فكّر في إثراء المتفوقين.\n';
-  const most = Object.keys(pc.cats).reduce((a,b)=> pc.cats[b].length > pc.cats[a].length ? b : a, 'ممتاز');
-  r += `- الفئة الأكثر: ${most} — ضع استراتيجيات ملائمة لهذه الفئة.\n`;
-  if(meanPct<60){ r += '- قصيرة المدى: جلسات دعم أسبوعية مركزة.\n- متوسطة: تعديل خطة الوحدة.\n- طويلة: مراجعة بنية المنهج.\n'; }
-  else if(meanPct<75){ r += '- قصيرة: أنشطة مراجعة تفاعلية.\n- متوسطة: مجموعات تعلم متباينة.\n- طويلة: بناء بنك مسائل.\n'; }
-  else { r += '- قصيرة: أنشطة إثرائية.\n- متوسطة: مسابقات معرفية.\n- طويلة: خطط تطوير مهني.\n'; }
-  return r;
-}
-function aggregatedRecommendations(aggCats, overallAvg, overallSdAvg){
-  let s=''; const most = Object.keys(aggCats).reduce((a,b)=> aggCats[b] > aggCats[a] ? b : a, 'ممتاز'); s+=`- أكثر الفئات تكرارًا: ${most} (${aggCats[most]} طالب).\n`;
-  if(overallAvg<60) s+='- توصية: خطة دعم شاملة ومتابعة أسبوعية.\n'; else if(overallAvg<75) s+='- توصية: تعزيز الاستراتيجيات التفاعلية.\n'; else s+='- توصية: تقديم إثراءات وتحفيز.\n';
-  if(overallSdAvg>=15) s+='- ملاحظة: تفاوت واضح — انقل ممارسات ناجحة بين الفصول.\n';
-  return s;
-}
-
-// export & print
-function downloadPDF(){ document.querySelectorAll('.no-print').forEach(el=>el.style.display='none'); const opt={margin:10,filename:`تقرير_التحليل_${new Date().toISOString().slice(0,10)}.pdf`,image:{type:'jpeg',quality:0.98},html2canvas:{scale:2},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}}; html2pdf().set(opt).from(document.querySelector('.container')).save().then(()=>{ document.querySelectorAll('.no-print').forEach(el=>el.style.display=''); }).catch(()=>{ document.querySelectorAll('.no-print').forEach(el=>el.style.display=''); alert('خطأ في إنشاء PDF'); });}
-function exportAllExcel(processedClasses){ const wb=XLSX.utils.book_new(); processedClasses.forEach(pc=>{ const wsData=[['الرقم','الاسم','الدرجة','النسبة','الفئة','فرق عن المتوسط']]; pc.rows.forEach((r,i)=> wsData.push([i+1,r.name,r.grade,toFixedStr(r.percent,2),r.category,toFixedStr(r.diffFromMean,2)])); const ws=XLSX.utils.aoa_to_sheet(wsData); XLSX.utils.book_append_sheet(wb,ws,pc.label)}); XLSX.writeFile(wb,`النتائج_المصنفة_${new Date().toISOString().slice(0,10)}.xlsx`)}
-function exportWordPlaceholder(){ const txt=document.getElementById('finalReport').innerText; alert('نسخة التقرير جاهزة — انسخ النص والصقه في Word. للتصدير التلقائي لـ .docx يمكن إضافته لاحقًا.'); console.log(txt)}
-
-// messages & helpers
-function showMessage(msg,type='info'){ const el=document.getElementById('message'); el.innerText=msg; el.style.padding='10px'; el.style.borderRadius='6px'; if(type==='error'){ el.style.background='#ffeef0'; el.style.color='#b02a37' } else { el.style.background='#e9f8f0'; el.style.color='#0b7038' } setTimeout(()=>{ el.innerText=''; el.style.background=''; el.style.color=''; el.style.padding='' },7000) }
-function clearMessages(){ document.getElementById('message').innerText='' }
-function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
-
-// reset
-document.getElementById('resetBtn').addEventListener('click', ()=>{ if(confirm('مسح كل الحقول والنتائج؟')) location.reload(); });
-
-// populateCorrVars when corr class changes (file-based)
-document.getElementById('corrClassSelect').addEventListener('change', populateCorrVarsFromFiles);
-
-// Initialize correlation button and set up functionality
-function initCorrelation(){
-  const corrHint = document.getElementById('corrHint');
-  const computeCorrBtn = document.createElement('button');
-  computeCorrBtn.style.marginTop='8px';
-  computeCorrBtn.className='no-print';
-  computeCorrBtn.innerText='احسب معامل الارتباط';
-  computeCorrBtn.onclick = ()=> computeCorrelation();
-  corrHint.appendChild(computeCorrBtn);
-}
-
-// Initialize everything when DOM is loaded
-document.addEventListener('DOMContentLoaded', ()=>{ 
-  buildFileInputs(); 
-  initCorrelation();
-});
-</script>
-</body>
-</html>
