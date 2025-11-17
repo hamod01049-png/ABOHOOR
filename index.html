@@ -8,7 +8,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
   :root{
@@ -23,8 +22,6 @@
     --success: #22c55e;
     --warning: #f59e0b;
     --danger: #ef4444;
-    --text: #1e293b;
-    --text-light: #64748b;
   }
   
   * {
@@ -36,13 +33,13 @@
   body {
     font-family: 'Cairo', sans-serif;
     background: var(--bg);
-    color: var(--text);
+    color: #1e293b;
     line-height: 1.6;
     padding: 20px;
   }
   
   .container {
-    max-width: 1400px;
+    max-width: 1200px;
     margin: 0 auto;
     background: var(--card);
     border-radius: 16px;
@@ -55,19 +52,16 @@
     color: white;
     padding: 24px;
     text-align: center;
-    position: relative;
   }
   
   header h1 {
     margin: 0;
     font-size: 1.8rem;
-    font-weight: 700;
   }
   
   header .sub {
     opacity: 0.9;
     margin-top: 8px;
-    font-size: 1.1rem;
   }
   
   .section {
@@ -80,17 +74,6 @@
     color: var(--primary);
     border-bottom: 2px solid var(--border);
     padding-bottom: 10px;
-    position: relative;
-  }
-  
-  .section-title::after {
-    content: "";
-    position: absolute;
-    bottom: -2px;
-    right: 0;
-    width: 80px;
-    height: 2px;
-    background: var(--secondary);
   }
   
   .grid {
@@ -103,7 +86,6 @@
     display: block;
     margin-bottom: 8px;
     font-weight: 600;
-    color: var(--text);
   }
   
   input[type="text"],
@@ -128,12 +110,11 @@
     font-family: 'Cairo', sans-serif;
     font-weight: 600;
     font-size: 1rem;
-    transition: all 0.3s;
+    margin: 5px;
   }
   
   button:hover {
     background: var(--primary-dark);
-    transform: translateY(-2px);
   }
   
   button.secondary {
@@ -155,6 +136,7 @@
     border-radius: 10px;
     background: #f8faff;
     text-align: center;
+    margin: 10px 0;
   }
   
   .card {
@@ -163,6 +145,7 @@
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     border: 1px solid var(--border);
+    margin: 10px 0;
   }
   
   .stats-grid {
@@ -243,10 +226,6 @@
     display: inline-block;
   }
   
-  .print-only {
-    display: none;
-  }
-  
   .charts-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -289,159 +268,17 @@
     border: 1px solid #fecaca;
   }
 
-  /* تصميم عصري للطباعة */
   @media print {
-    @page {
-      margin: 1cm;
-      size: A4;
-    }
-    
-    body {
-      background: white !important;
-      color: black !important;
-      font-size: 12pt;
-      line-height: 1.4;
-      padding: 0 !important;
-    }
-    
-    .container {
-      box-shadow: none !important;
-      border-radius: 0 !important;
-      max-width: 100% !important;
-      margin: 0 !important;
-    }
-    
     .no-print {
       display: none !important;
     }
     
-    .print-only {
-      display: block !important;
-    }
-    
-    header {
-      background: #2563eb !important;
-      color: white !important;
-      padding: 20px !important;
-      margin-bottom: 20px !important;
-      -webkit-print-color-adjust: exact;
-    }
-    
-    .section {
-      padding: 15px !important;
-      break-inside: avoid;
-    }
-    
-    .section-title {
-      color: #2563eb !important;
-      border-bottom-color: #e2e8f0 !important;
-      font-size: 16pt !important;
-      margin-bottom: 15px !important;
-    }
-    
-    .stats-grid {
-      grid-template-columns: repeat(4, 1fr) !important;
-      gap: 10px !important;
-      margin: 15px 0 !important;
-    }
-    
-    .stat-card {
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
-      border: 1px solid #e2e8f0 !important;
-      padding: 15px !important;
-    }
-    
-    .charts-container {
-      grid-template-columns: 1fr 1fr !important;
-      gap: 15px !important;
-      margin: 20px 0 !important;
-    }
-    
-    .chart-card {
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
-      border: 1px solid #e2e8f0 !important;
-      break-inside: avoid;
-    }
-    
-    .table-wrap {
-      border: 1px solid #e2e8f0 !important;
-      break-inside: avoid;
-    }
-    
-    table {
-      font-size: 10pt !important;
-    }
-    
-    th {
-      background: #2563eb !important;
-      color: white !important;
-      -webkit-print-color-adjust: exact;
-    }
-    
-    .report {
-      background: #f8fafc !important;
-      border: 1px solid #e2e8f0 !important;
-      break-inside: avoid;
+    .container {
+      box-shadow: none !important;
     }
     
     button {
       display: none !important;
-    }
-    
-    /* تحسين الرسوم البيانية للطباعة */
-    canvas {
-      max-width: 100% !important;
-      height: auto !important;
-    }
-    
-    /* ترويسة وتذييل الصفحة */
-    .page-header {
-      text-align: center;
-      margin-bottom: 20px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #2563eb;
-    }
-    
-    .page-footer {
-      text-align: center;
-      margin-top: 20px;
-      padding-top: 10px;
-      border-top: 1px solid #e2e8f0;
-      font-size: 10pt;
-      color: #64748b;
-    }
-  }
-
-  /* تحسين التصميم للشاشات الصغيرة */
-  @media (max-width: 768px) {
-    .grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .charts-container {
-      grid-template-columns: 1fr;
-    }
-    
-    .stats-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .controls {
-      flex-direction: column;
-    }
-    
-    button {
-      width: 100%;
-    }
-    
-    @media print {
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-      }
-      
-      .charts-container {
-        grid-template-columns: 1fr !important;
-      }
     }
   }
 </style>
@@ -455,52 +292,67 @@
 
   <!-- INPUT SECTION -->
   <div class="section no-print" id="inputSection">
-    <h3 class="section-title">إعداد الاختبار وإدخال البيانات</h3>
+    <h3 class="section-title">إدخال البيانات</h3>
+    
     <div class="grid">
       <div>
         <label>اسم المعلم</label>
         <input id="teacherName" type="text" value="محمد الحربي" />
       </div>
       <div>
-        <label>اسم المدرسة</label>
-        <input id="schoolName" type="text" value="ثانوية الرازي" />
-      </div>
-      <div>
         <label>المادة</label>
         <input id="subject" type="text" value="الرياضيات" />
-      </div>
-      <div>
-        <label>نوع الاختبار</label>
-        <select id="testType">
-          <option value="تكويني">تكويني</option>
-          <option value="تقويمي">تقويمي</option>
-        </select>
       </div>
       <div>
         <label>الدرجة الكلية</label>
         <input id="totalGrade" type="number" value="100" min="1" />
       </div>
-      <div>
-        <label>عدد الفصول</label>
-        <select id="classCount">
-          <option value="1">فصل واحد</option>
-          <option value="2">فصلان</option>
-          <option value="3">3 فصول</option>
-        </select>
-      </div>
     </div>
 
     <div style="margin-top:20px">
-      <label>إدخال بيانات الفصول</label>
-      <div id="filesArea"></div>
-      <div class="small" style="margin-top:8px">
-        ارفع ملف Excel أو الصق البيانات مباشرة (عمودان: اسم الطالب، الدرجة)
+      <label>اختر طريقة إدخال البيانات:</label>
+      <div style="display:flex; gap:10px; margin:10px 0;">
+        <button onclick="showUpload()">📁 رفع ملف Excel</button>
+        <button onclick="showPaste()">📋 لصق البيانات</button>
+        <button onclick="showManual()">✍️ إدخال يدوي</button>
       </div>
     </div>
 
+    <!-- طريقة رفع الملف -->
+    <div id="uploadMethod" style="display:none">
+      <div class="upload-box">
+        <input type="file" id="excelFile" accept=".xlsx,.xls" style="margin-bottom:10px">
+        <div class="small">اختر ملف Excel يحتوي على عمودين: اسم الطالب والدرجة</div>
+      </div>
+    </div>
+
+    <!-- طريقة اللصق -->
+    <div id="pasteMethod" style="display:none">
+      <textarea id="pasteData" rows="10" placeholder="الصق البيانات هنا من Excel...
+مثال:
+أحمد,85
+محمد,92
+فاطمة,76
+سارة,88
+خالد,65"></textarea>
+      <div class="small">انسخ مباشرة من Excel (عمود الأسماء ثم الدرجات)</div>
+    </div>
+
+    <!-- طريقة الإدخال اليدوي -->
+    <div id="manualMethod" style="display:none">
+      <div id="manualInputs">
+        <div class="manual-row">
+          <input type="text" placeholder="اسم الطالب" class="student-name">
+          <input type="number" placeholder="الدرجة" class="student-grade" style="margin:0 10px">
+          <button onclick="removeRow(this)" class="danger">✕</button>
+        </div>
+      </div>
+      <button onclick="addRow()" class="secondary">+ إضافة طالب</button>
+    </div>
+
     <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
-      <button id="analyzeBtn" class="secondary">تحليل البيانات</button>
-      <button id="resetBtn" class="danger">إعادة ضبط</button>
+      <button onclick="analyzeData()" class="secondary">تحليل البيانات</button>
+      <button onclick="resetData()" class="danger">إعادة ضبط</button>
     </div>
 
     <div id="message" style="margin-top:15px"></div>
@@ -508,13 +360,6 @@
 
   <!-- RESULTS SECTION -->
   <div class="section" id="resultsSection" style="display:none">
-    <!-- ترويسة الطباعة -->
-    <div class="print-only page-header">
-      <h1>التقرير التربوي التحليلي</h1>
-      <div class="small">نظام التحليل التربوي الذكي - إعداد: محمد الحربي</div>
-      <div class="small">تاريخ التقرير: <span id="reportDate"></span></div>
-    </div>
-
     <h3 class="section-title">نتائج التحليل</h3>
     <div id="summaryArea"></div>
     
@@ -523,37 +368,22 @@
     <!-- الرسوم البيانية -->
     <div class="charts-container">
       <div class="chart-card">
-        <div class="chart-title">مقارنة متوسطات الفصول</div>
-        <canvas id="comparisonChart"></canvas>
-      </div>
-      <div class="chart-card">
-        <div class="chart-title">التوزيع التصنيفي العام</div>
+        <div class="chart-title">التوزيع التصنيفي</div>
         <canvas id="categoryChart"></canvas>
       </div>
       <div class="chart-card">
         <div class="chart-title">توزيع الدرجات</div>
         <canvas id="distributionChart"></canvas>
       </div>
-      <div class="chart-card">
-        <div class="chart-title">مقارنة الانحراف المعياري</div>
-        <canvas id="varianceChart"></canvas>
-      </div>
     </div>
     
     <div id="perClassTables" style="margin-top:20px"></div>
     <div class="report" id="finalReport" style="margin-top:20px"></div>
 
-    <!-- تذييل الطباعة -->
-    <div class="print-only page-footer">
-      <p>تم إنشاء هذا التقرير تلقائياً بواسطة نظام التحليل التربوي الذكي</p>
-      <p>ثانوية الرازي - قسم التطوير التربوي</p>
-    </div>
-
     <div class="controls no-print">
-      <button class="secondary" id="downloadPdf">📄 تنزيل PDF</button>
-      <button class="secondary" id="downloadExcel">📊 تنزيل Excel</button>
-      <button class="secondary" id="printReport">🖨️ طباعة التقرير</button>
-      <button id="backBtn">↩️ العودة</button>
+      <button onclick="window.print()" class="secondary">🖨️ طباعة التقرير</button>
+      <button onclick="exportToExcel()" class="secondary">📊 تصدير Excel</button>
+      <button onclick="showInputSection()" class="danger">↩️ العودة</button>
     </div>
   </div>
 </div>
@@ -578,243 +408,290 @@ function classifyPercent(p) {
   if (p >= 60) return 'مقبول'; 
   return 'ضعيف' 
 }
-function escapeHtml(s) { 
-  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') 
+
+// إظهار طرق الإدخال
+function showUpload() {
+  hideAllMethods();
+  document.getElementById('uploadMethod').style.display = 'block';
 }
 
-// عناصر الواجهة
-const filesArea = document.getElementById('filesArea');
-const classCountSelect = document.getElementById('classCount');
-let classFileInputs = [];
-let charts = []; // لتخزين الرسوم البيانية
+function showPaste() {
+  hideAllMethods();
+  document.getElementById('pasteMethod').style.display = 'block';
+}
 
-// بناء واجهة إدخال البيانات
-function buildFileInputs() {
-  filesArea.innerHTML = ''; 
-  classFileInputs = []; 
-  const count = Number(classCountSelect.value);
-  
-  for (let i = 1; i <= count; i++) {
-    const div = document.createElement('div'); 
-    div.style.marginTop = '12px';
-    div.innerHTML = `
-      <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">
-        <strong>فصل ${i}</strong>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div class="upload-box">
-          <input type="file" accept=".xlsx,.xls" class="classFileInput" data-class="${i}" style="margin-bottom:10px">
-          <div class="small">رفع ملف Excel</div>
-        </div>
-        <div>
-          <textarea class="pasteArea" data-class-area="${i}" rows="5" placeholder="أو الصق البيانات من Excel هنا...
-مثال:
-أحمد,85
-محمد,92
-فاطمة,76"></textarea>
-        </div>
-      </div>
-    `;
-    filesArea.appendChild(div);
-    const fileInput = div.querySelector('.classFileInput');
-    const pasteArea = div.querySelector('.pasteArea');
-    classFileInputs.push({ fileInput, pasteArea, sheetJson: null, classIndex: i });
-    fileInput.addEventListener('change', onClassFileChange);
+function showManual() {
+  hideAllMethods();
+  document.getElementById('manualMethod').style.display = 'block';
+}
+
+function hideAllMethods() {
+  document.getElementById('uploadMethod').style.display = 'none';
+  document.getElementById('pasteMethod').style.display = 'none';
+  document.getElementById('manualMethod').style.display = 'none';
+}
+
+// الإدخال اليدوي
+function addRow() {
+  const container = document.getElementById('manualInputs');
+  const newRow = document.createElement('div');
+  newRow.className = 'manual-row';
+  newRow.innerHTML = `
+    <input type="text" placeholder="اسم الطالب" class="student-name">
+    <input type="number" placeholder="الدرجة" class="student-grade" style="margin:0 10px">
+    <button onclick="removeRow(this)" class="danger">✕</button>
+  `;
+  container.appendChild(newRow);
+}
+
+function removeRow(button) {
+  button.parentElement.remove();
+}
+
+// تحليل البيانات الرئيسي
+async function analyzeData() {
+  try {
+    let students = [];
+    
+    // التحقق من طريقة الإدخال
+    if (document.getElementById('uploadMethod').style.display === 'block') {
+      students = await getDataFromUpload();
+    } else if (document.getElementById('pasteMethod').style.display === 'block') {
+      students = getDataFromPaste();
+    } else if (document.getElementById('manualMethod').style.display === 'block') {
+      students = getDataFromManual();
+    } else {
+      showMessage('الرجاء اختيار طريقة إدخال البيانات', 'error');
+      return;
+    }
+    
+    if (students.length === 0) {
+      showMessage('لم يتم إدخال بيانات صالحة', 'error');
+      return;
+    }
+    
+    processAndDisplayResults(students);
+    
+  } catch (error) {
+    showMessage('حدث خطأ أثناء التحليل: ' + error.message, 'error');
   }
 }
 
-// قراءة ملف Excel
-async function onClassFileChange(e) {
-  const input = e.target; 
-  const idx = classFileInputs.findIndex(c => c.fileInput === input); 
-  if (idx < 0) return;
-  
-  const file = input.files[0]; 
-  if (!file) return;
+// الحصول على البيانات من رفع الملف
+async function getDataFromUpload() {
+  const fileInput = document.getElementById('excelFile');
+  if (!fileInput.files[0]) {
+    showMessage('الرجاء اختيار ملف Excel', 'error');
+    return [];
+  }
   
   try {
-    const arrayBuffer = await file.arrayBuffer();
+    const arrayBuffer = await fileInput.files[0].arrayBuffer();
     const workbook = XLSX.read(arrayBuffer, { type: 'array' });
     const sheetName = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheetName];
     const json = XLSX.utils.sheet_to_json(sheet, { defval: '' });
     
-    classFileInputs[idx].sheetJson = json;
-    showMessage(`تم قراءة ملف فصل ${idx + 1} - ${json.length} طالب`, 'success');
-  } catch (err) {
+    const students = json.map((row, idx) => {
+      const name = row['اسم الطالب'] || row['name'] || row['Name'] || row['student'] || Object.values(row)[0] || ('طالب ' + (idx + 1));
+      const rawGrade = row['الدرجة'] || row['grade'] || row['Grade'] || Object.values(row)[1] || '';
+      const grade = Number(rawGrade);
+      
+      return {
+        name: String(name).trim(),
+        grade: isNaN(grade) ? 0 : grade
+      };
+    }).filter(s => s.name && s.grade > 0);
+    
+    showMessage(`تم تحميل ${students.length} طالب بنجاح`, 'success');
+    return students;
+    
+  } catch (error) {
     showMessage('خطأ في قراءة ملف Excel', 'error');
+    return [];
   }
 }
 
-// تحليل البيانات
-document.getElementById('analyzeBtn').addEventListener('click', async () => {
-  try {
-    const teacher = document.getElementById('teacherName').value || '-';
-    const school = document.getElementById('schoolName').value || '-';
-    const subject = document.getElementById('subject').value || '-';
-    const testType = document.getElementById('testType').value || '-';
-    const totalGrade = Number(document.getElementById('totalGrade').value) || 100;
-    const classCount = Number(classCountSelect.value);
-    const classesData = [];
-    
-    for (let i = 0; i < classCount; i++) {
-      const cfi = classFileInputs[i];
-      let json = cfi.sheetJson;
-      
-      if ((!json || json.length === 0) && cfi.pasteArea.value.trim()) {
-        json = parsePasted(cfi.pasteArea.value);
-      }
-      
-      if (!json || json.length === 0) continue;
-      
-      const normalized = json.map((row, idx) => {
-        const name = row['اسم الطالب'] || row['name'] || row['Name'] || row['student'] || Object.values(row)[0] || ('طالب ' + (idx + 1));
-        const rawGrade = row['الدرجة'] || row['grade'] || row['Grade'] || Object.values(row)[1] || '';
-        const grade = Number(rawGrade);
-        
-        return {
-          name: String(name).trim(), 
-          grade: isNaN(grade) ? null : grade
-        };
-      }).filter(r => r.name && r.grade !== null);
-      
-      if (normalized.length > 0) {
-        classesData.push({
-          label: `الفصل ${i + 1}`, 
-          rows: normalized
-        });
-      }
-    }
-    
-    if (classesData.length === 0) {
-      showMessage('لم يتم إدخال بيانات صالحة', 'error');
-      return;
-    }
-    
-    const processedClasses = classesData.map(c => {
-      const grades = c.rows.map(r => r.grade);
-      const percents = grades.map(g => (g / totalGrade) * 100);
-      
-      const meanGrade = mean(grades);
-      const meanPct = mean(percents);
-      const medPct = median(percents);
-      const sdPct = stdPop(percents);
-      const maxGrade = Math.max(...grades);
-      const minGrade = Math.min(...grades);
-      
-      const cats = { 'ممتاز': [], 'جيد جداً': [], 'جيد': [], 'مقبول': [], 'ضعيف': [] };
-      const rows = c.rows.map(r => {
-        const pct = (r.grade / totalGrade) * 100;
-        const cat = classifyPercent(pct);
-        const out = { ...r, percent: pct, category: cat };
-        cats[cat].push(out);
-        return out;
-      });
-      
-      return {
-        label: c.label,
-        rows,
-        stats: {
-          count: rows.length,
-          meanGrade: toFixedStr(meanGrade, 2),
-          meanPercent: toFixedStr(meanPct, 2),
-          median: toFixedStr(medPct, 2),
-          stdDev: toFixedStr(sdPct, 2),
-          maxGrade,
-          minGrade
-        },
-        cats
-      };
-    });
-
-    renderResults({ teacher, school, subject, testType, totalGrade, processedClasses });
-    showMessage('تم التحليل بنجاح', 'success');
-  } catch (err) {
-    showMessage('خطأ أثناء التحليل', 'error');
+// الحصول على البيانات من اللصق
+function getDataFromPaste() {
+  const pasteText = document.getElementById('pasteData').value.trim();
+  if (!pasteText) {
+    showMessage('الرجاء لصق البيانات', 'error');
+    return [];
   }
-});
+  
+  const lines = pasteText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  const students = lines.map((line, idx) => {
+    const parts = line.split(/[,;\t]/).map(p => p.trim());
+    const name = parts[0] || 'طالب ' + (idx + 1);
+    const grade = Number(parts[1]) || 0;
+    
+    return { name, grade };
+  }).filter(s => s.name && s.grade > 0);
+  
+  showMessage(`تم معالجة ${students.length} طالب بنجاح`, 'success');
+  return students;
+}
 
-// تحليل البيانات المنسوخة
-function parsePasted(text) {
-  const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-  return lines.map((l, idx) => {
-    const parts = l.split(/[,;\t]/).map(p => p.trim());
-    const obj = {};
-    obj['اسم الطالب'] = parts[0] || 'طالب ' + (idx + 1);
-    obj['الدرجة'] = parts[1] || '';
-    return obj;
+// الحصول على البيانات من الإدخال اليدوي
+function getDataFromManual() {
+  const nameInputs = document.querySelectorAll('.student-name');
+  const gradeInputs = document.querySelectorAll('.student-grade');
+  
+  const students = [];
+  for (let i = 0; i < nameInputs.length; i++) {
+    const name = nameInputs[i].value.trim();
+    const grade = Number(gradeInputs[i].value);
+    
+    if (name && grade > 0) {
+      students.push({ name, grade });
+    }
+  }
+  
+  if (students.length === 0) {
+    showMessage('الرجاء إدخال بيانات الطلاب', 'error');
+    return [];
+  }
+  
+  showMessage(`تم إدخال ${students.length} طالب بنجاح`, 'success');
+  return students;
+}
+
+// معالجة وعرض النتائج
+function processAndDisplayResults(students) {
+  const teacher = document.getElementById('teacherName').value || 'غير محدد';
+  const subject = document.getElementById('subject').value || 'غير محدد';
+  const totalGrade = Number(document.getElementById('totalGrade').value) || 100;
+  
+  const grades = students.map(s => s.grade);
+  const percents = grades.map(g => (g / totalGrade) * 100);
+  
+  const meanGrade = mean(grades);
+  const meanPct = mean(percents);
+  const medPct = median(percents);
+  const sdPct = stdPop(percents);
+  const maxGrade = Math.max(...grades);
+  const minGrade = Math.min(...grades);
+  
+  // التصنيف
+  const categories = { 'ممتاز': [], 'جيد جداً': [], 'جيد': [], 'مقبول': [], 'ضعيف': [] };
+  const processedStudents = students.map(student => {
+    const pct = (student.grade / totalGrade) * 100;
+    const category = classifyPercent(pct);
+    categories[category].push(student);
+    return { ...student, percent: pct, category };
   });
+  
+  // عرض النتائج
+  document.getElementById('inputSection').style.display = 'none';
+  document.getElementById('resultsSection').style.display = 'block';
+  
+  // الملخص
+  document.getElementById('summaryArea').innerHTML = `
+    <div class="small">المعلم: <strong>${teacher}</strong> — المادة: <strong>${subject}</strong> — عدد الطلاب: <strong>${students.length}</strong></div>
+  `;
+  
+  // الإحصائيات
+  document.getElementById('overallStats').innerHTML = `
+    <div class="stat-card">
+      <h3>المتوسط</h3>
+      <div class="stat-value">${toFixedStr(meanPct, 1)}%</div>
+      <div class="small">${toFixedStr(meanGrade, 1)} درجة</div>
+    </div>
+    <div class="stat-card">
+      <h3>الوسيط</h3>
+      <div class="stat-value">${toFixedStr(medPct, 1)}%</div>
+    </div>
+    <div class="stat-card">
+      <h3>الانحراف المعياري</h3>
+      <div class="stat-value">${toFixedStr(sdPct, 1)}%</div>
+    </div>
+    <div class="stat-card">
+      <h3>أعلى/أقل درجة</h3>
+      <div class="stat-value">${maxGrade}/${minGrade}</div>
+    </div>
+  `;
+  
+  // إنشاء الرسوم البيانية
+  createCharts(categories, grades);
+  
+  // جدول الطلاب
+  let tableHtml = `
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>اسم الطالب</th>
+            <th>الدرجة</th>
+            <th>النسبة</th>
+            <th>التصنيف</th>
+          </tr>
+        </thead>
+        <tbody>
+  `;
+  
+  processedStudents.forEach((student, index) => {
+    tableHtml += `
+      <tr>
+        <td>${index + 1}</td>
+        <td>${student.name}</td>
+        <td>${student.grade}</td>
+        <td>${toFixedStr(student.percent, 1)}%</td>
+        <td>${student.category}</td>
+      </tr>
+    `;
+  });
+  
+  tableHtml += `</tbody></table></div>`;
+  document.getElementById('perClassTables').innerHTML = tableHtml;
+  
+  // التقرير النهائي
+  const reportText = `
+تقرير التحليل التربوي
+المادة: ${subject}
+المعلم: ${teacher}
+عدد الطلاب: ${students.length}
+
+الإحصائيات:
+• المتوسط: ${toFixedStr(meanPct, 1)}%
+• الوسيط: ${toFixedStr(medPct, 1)}%
+• الانحراف المعياري: ${toFixedStr(sdPct, 1)}%
+• أعلى درجة: ${maxGrade}
+• أقل درجة: ${minGrade}
+
+التوزيع التصنيفي:
+• ممتاز: ${categories['ممتاز'].length} طالب
+• جيد جداً: ${categories['جيد جداً'].length} طالب
+• جيد: ${categories['جيد'].length} طالب
+• مقبول: ${categories['مقبول'].length} طالب
+• ضعيف: ${categories['ضعيف'].length} طالب
+
+${getAnalysisText(meanPct, sdPct, categories)}
+
+تاريخ التقرير: ${new Date().toLocaleDateString('ar-EG')}
+  `;
+  
+  document.getElementById('finalReport').innerText = reportText;
 }
 
 // إنشاء الرسوم البيانية
-function createCharts(processedClasses) {
-  // تدمير الرسوم البيانية القديمة
-  charts.forEach(chart => chart.destroy());
-  charts = [];
-  
-  const labels = processedClasses.map(c => c.label);
-  const avgPercents = processedClasses.map(c => Number(c.stats.meanPercent));
-  const stdDevs = processedClasses.map(c => Number(c.stats.stdDev));
-  
-  // جمع البيانات للتوزيع التصنيفي العام
-  const allCategories = ['ممتاز', 'جيد جداً', 'جيد', 'مقبول', 'ضعيف'];
-  const categoryCounts = allCategories.map(cat => 
-    processedClasses.reduce((sum, pc) => sum + pc.cats[cat].length, 0)
-  );
-  
-  // 1. مخطط مقارنة المتوسطات
-  const comparisonCtx = document.getElementById('comparisonChart').getContext('2d');
-  charts.push(new Chart(comparisonCtx, {
-    type: 'bar',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: 'المتوسط (%)',
-        data: avgPercents,
-        backgroundColor: '#3b82f6',
-        borderColor: '#1d4ed8',
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: {
-          display: false
-        },
-        title: {
-          display: true,
-          text: 'مقارنة متوسطات الفصول'
-        }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          max: 100,
-          title: {
-            display: true,
-            text: 'النسبة المئوية'
-          }
-        }
-      }
-    }
-  }));
-  
-  // 2. مخطط التوزيع التصنيفي
+function createCharts(categories, grades) {
+  // مخطط التصنيفات
   const categoryCtx = document.getElementById('categoryChart').getContext('2d');
-  charts.push(new Chart(categoryCtx, {
+  new Chart(categoryCtx, {
     type: 'pie',
     data: {
-      labels: allCategories,
+      labels: ['ممتاز', 'جيد جداً', 'جيد', 'مقبول', 'ضعيف'],
       datasets: [{
-        data: categoryCounts,
-        backgroundColor: [
-          '#10b981', // ممتاز - أخضر
-          '#3b82f6', // جيد جداً - أزرق
-          '#f59e0b', // جيد - برتقالي
-          '#ef4444', // مقبول - أحمر
-          '#64748b'  // ضعيف - رمادي
-        ]
+        data: [
+          categories['ممتاز'].length,
+          categories['جيد جداً'].length,
+          categories['جيد'].length,
+          categories['مقبول'].length,
+          categories['ضعيف'].length
+        ],
+        backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#64748b']
       }]
     },
     options: {
@@ -825,24 +702,24 @@ function createCharts(processedClasses) {
         }
       }
     }
-  }));
+  });
   
-  // 3. مخطط توزيع الدرجات (هيستوجرام مبسط)
-  const allGrades = processedClasses.flatMap(pc => pc.rows.map(r => r.grade));
+  // مخطط توزيع الدرجات
+  const distributionCtx = document.getElementById('distributionChart').getContext('2d');
   const gradeRanges = ['0-49', '50-59', '60-69', '70-79', '80-89', '90-100'];
-  const gradeCounts = gradeRanges.map(() => 0);
+  const gradeCounts = [0, 0, 0, 0, 0, 0];
   
-  allGrades.forEach(grade => {
-    if (grade >= 90) gradeCounts[5]++;
-    else if (grade >= 80) gradeCounts[4]++;
-    else if (grade >= 70) gradeCounts[3]++;
-    else if (grade >= 60) gradeCounts[2]++;
-    else if (grade >= 50) gradeCounts[1]++;
+  grades.forEach(grade => {
+    const percent = (grade / 100) * 100;
+    if (percent >= 90) gradeCounts[5]++;
+    else if (percent >= 80) gradeCounts[4]++;
+    else if (percent >= 70) gradeCounts[3]++;
+    else if (percent >= 60) gradeCounts[2]++;
+    else if (percent >= 50) gradeCounts[1]++;
     else gradeCounts[0]++;
   });
   
-  const distributionCtx = document.getElementById('distributionChart').getContext('2d');
-  charts.push(new Chart(distributionCtx, {
+  new Chart(distributionCtx, {
     type: 'bar',
     data: {
       labels: gradeRanges,
@@ -856,155 +733,107 @@ function createCharts(processedClasses) {
       responsive: true,
       scales: {
         y: {
-          beginAtZero: true,
-          title: {
-            display: true,
-            text: 'عدد الطلاب'
-          }
-        },
-        x: {
-          title: {
-            display: true,
-            text: 'مدى الدرجات'
-          }
+          beginAtZero: true
         }
       }
     }
-  }));
-  
-  // 4. مخطط الانحراف المعياري
-  const varianceCtx = document.getElementById('varianceChart').getContext('2d');
-  charts.push(new Chart(varianceCtx, {
-    type: 'line',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: 'الانحراف المعياري',
-        data: stdDevs,
-        borderColor: '#ef4444',
-        backgroundColor: 'rgba(239, 68, 68, 0.1)',
-        fill: true,
-        tension: 0.4
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: {
-          beginAtZero: true,
-          title: {
-            display: true,
-            text: 'الانحراف المعياري'
-          }
-        }
-      }
-    }
-  }));
-}
-
-// عرض النتائج
-function renderResults(context) {
-  document.getElementById('inputSection').style.display = 'none';
-  document.getElementById('resultsSection').style.display = 'block';
-  
-  // تحديث تاريخ التقرير
-  document.getElementById('reportDate').textContent = new Date().toLocaleDateString('ar-EG');
-  
-  const { teacher, school, subject, testType, totalGrade, processedClasses } = context;
-  
-  document.getElementById('summaryArea').innerHTML = `
-    <div class="small">المعلم: <strong>${escapeHtml(teacher)}</strong> — المدرسة: <strong>${escapeHtml(school)}</strong> — المادة: <strong>${escapeHtml(subject)}</strong></div>
-  `;
-
-  // الإحصائيات
-  const statsHTML = processedClasses.map(c => `
-    <div class="stat-card">
-      <h3>${c.label}</h3>
-      <div class="stat-value">${c.stats.meanPercent}%</div>
-      <div class="small">${c.stats.count} طالب</div>
-      <div class="small">الانحراف: ${c.stats.stdDev}%</div>
-    </div>
-  `).join('');
-  
-  document.getElementById('overallStats').innerHTML = statsHTML;
-
-  // إنشاء الرسوم البيانية
-  createCharts(processedClasses);
-
-  // الجداول
-  const perClassDiv = document.getElementById('perClassTables');
-  perClassDiv.innerHTML = '';
-  
-  processedClasses.forEach(c => {
-    const cards = `
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
-        <div class="card"><h4>${c.label}</h4><div class="small">الطلاب: ${c.stats.count}</div><div style="font-weight:700">${c.stats.meanPercent}%</div></div>
-        <div class="card"><h4>الوسيط</h4><div class="small">${c.stats.median}%</div></div>
-        <div class="card"><h4>الانحراف</h4><div class="small">${c.stats.stdDev}%</div></div>
-      </div>
-    `;
-    
-    let tableHtml = `<h4 style="margin-top:14px">${c.label} — قائمة الطلاب</h4><div class="table-wrap"><table><thead><tr><th>الرقم</th><th>الاسم</th><th>الدرجة</th><th>النسبة</th><th>الفئة</th></tr></thead><tbody>`;
-    c.rows.forEach((r, i) => {
-      tableHtml += `<tr><td>${i + 1}</td><td>${escapeHtml(r.name)}</td><td>${r.grade}</td><td>${toFixedStr(r.percent, 2)}%</td><td>${r.category}</td></tr>`;
-    });
-    tableHtml += `</tbody></table></div>`;
-    perClassDiv.innerHTML += cards + tableHtml;
   });
-
-  // التقرير
-  const reportText = `
-تقرير التحليل التربوي — ${escapeHtml(subject)}
-المعلم: ${escapeHtml(teacher)} — المدرسة: ${escapeHtml(school)}
-نوع الاختبار: ${escapeHtml(testType)} — الدرجة الكلية: ${totalGrade}
-
-الملخص:
-${processedClasses.map(pc => `
-${pc.label}:
-- عدد الطلاب: ${pc.stats.count}
-- المتوسط: ${pc.stats.meanPercent}%
-- الوسيط: ${pc.stats.median}%
-- الانحراف المعياري: ${pc.stats.stdDev}%
-- التوزيع: ${Object.entries(pc.cats).map(([k, v]) => `${k}(${v.length})`).join('، ')}
-`).join('\n')}
-
-تحليل النتائج:
-${getPedagogicalAnalysis(processedClasses)}
-
-تم الإعداد: ${new Date().toLocaleDateString('ar-EG')}
-  `;
-  
-  document.getElementById('finalReport').innerText = reportText;
-
-  // الأزرار
-  document.getElementById('downloadPdf').onclick = () => downloadPDF();
-  document.getElementById('downloadExcel').onclick = () => exportAllExcel(processedClasses);
-  document.getElementById('printReport').onclick = () => window.print();
-  document.getElementById('backBtn').onclick = () => {
-    document.getElementById('resultsSection').style.display = 'none';
-    document.getElementById('inputSection').style.display = 'block';
-  };
 }
 
-// تحليل تربوي
-function getPedagogicalAnalysis(processedClasses) {
-  let analysis = '';
-  const overallAvg = mean(processedClasses.map(pc => Number(pc.stats.meanPercent)));
+// نص التحليل التربوي
+function getAnalysisText(meanPct, sdPct, categories) {
+  let analysis = '\nالتحليل التربوي:\n';
   
-  if (overallAvg >= 80) {
-    analysis = '• الأداء العام ممتاز - يمكن التركيز على أنشطة الإثراء والتحدي\n• مستوى عالٍ من الفهم والاستيعاب';
-  } else if (overallAvg >= 70) {
-    analysis = '• الأداء جيد - يحتاج لتعزيز بعض المفاهيم\n• التركيز على الطلاب في الفئة المتوسطة';
-  } else if (overallAvg >= 60) {
-    analysis = '• الأداء مقبول - يحتاج لدعم إضافي\n• مراجعة استراتيجيات التدريس';
+  if (meanPct >= 80) {
+    analysis += '• مستوى الأداء ممتاز بشكل عام\n';
+    analysis += '• يمكن التركيز على أنشطة الإثراء والتحدي\n';
+  } else if (meanPct >= 70) {
+    analysis += '• مستوى الأداء جيد\n';
+    analysis += '• يحتاج لتعزيز بعض المفاهيم الأساسية\n';
+  } else if (meanPct >= 60) {
+    analysis += '• مستوى الأداء مقبول\n';
+    analysis += '• يحتاج لدعم إضافي في المهارات الأساسية\n';
   } else {
-    analysis = '• الأداء يحتاج لتدخل عاجل\n• إعادة تدريس المفاهيم الأساسية\n• توفير دعم فردي';
+    analysis += '• مستوى الأداء يحتاج لتدخل عاجل\n';
+    analysis += '• يوصى بإعادة تدريس المفاهيم الأساسية\n';
+  }
+  
+  if (sdPct > 15) {
+    analysis += '• هناك تفاوت كبير في المستويات بين الطلاب\n';
+    analysis += '• يوصى بالتعلم المتمايز حسب المستويات\n';
+  } else if (sdPct > 8) {
+    analysis += '• هناك تفاوت متوسط في المستويات\n';
+    analysis += '• يمكن عمل مجموعات تعلم متجانسة\n';
+  } else {
+    analysis += '• المستويات متقاربة بين الطلاب\n';
+    analysis += '• مناسبة للتعلم الجماعي\n';
   }
   
   return analysis;
 }
 
-// التصدير لـ PDF
-function downloadPDF() {
-  const elements = document.querySelectorAll('.no-print');
-  elements.forEach(el => el.style.display = 'none');
+// التصدير لـ Excel
+function exportToExcel() {
+  const teacher = document.getElementById('teacherName').value || 'غير محدد';
+  const subject = document.getElementById('subject').value || 'غير محدد';
+  
+  const wb = XLSX.utils.book_new();
+  const wsData = [['الرقم', 'اسم الطالب', 'الدرجة', 'النسبة%', 'التصنيف']];
+  
+  const rows = document.querySelectorAll('#perClassTables table tbody tr');
+  rows.forEach((row, index) => {
+    const cells = row.querySelectorAll('td');
+    wsData.push([
+      index + 1,
+      cells[1].textContent,
+      cells[2].textContent,
+      cells[3].textContent,
+      cells[4].textContent
+    ]);
+  });
+  
+  const ws = XLSX.utils.aoa_to_sheet(wsData);
+  XLSX.utils.book_append_sheet(wb, ws, 'النتائج');
+  XLSX.writeFile(wb, `نتائج_${subject}_${teacher}.xlsx`);
+}
+
+// دوال المساعدة
+function showMessage(msg, type) {
+  const el = document.getElementById('message');
+  el.textContent = msg;
+  el.className = `message ${type}`;
+  setTimeout(() => {
+    el.textContent = '';
+    el.className = '';
+  }, 5000);
+}
+
+function resetData() {
+  if (confirm('هل تريد مسح جميع البيانات؟')) {
+    document.getElementById('excelFile').value = '';
+    document.getElementById('pasteData').value = '';
+    document.getElementById('manualInputs').innerHTML = `
+      <div class="manual-row">
+        <input type="text" placeholder="اسم الطالب" class="student-name">
+        <input type="number" placeholder="الدرجة" class="student-grade" style="margin:0 10px">
+        <button onclick="removeRow(this)" class="danger">✕</button>
+      </div>
+    `;
+    hideAllMethods();
+    showMessage('تم مسح جميع البيانات', 'success');
+  }
+}
+
+function showInputSection() {
+  document.getElementById('resultsSection').style.display = 'none';
+  document.getElementById('inputSection').style.display = 'block';
+}
+
+// التهيئة الأولية
+document.addEventListener('DOMContentLoaded', function() {
+  showMessage('مرحباً! اختر طريقة إدخال البيانات لبدء التحليل', 'success');
+  addRow(); // إضافة صف افتراضي للإدخال اليدوي
+});
+</script>
+</body>
+</html>
